@@ -62,3 +62,5 @@ var createArreyOfObject = function (numberOfObject) {
   }
   return array;
 };
+
+var ads = createArreyOfObject(NUMBER_OF_ADS);
