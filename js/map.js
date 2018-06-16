@@ -22,6 +22,8 @@ var LOCATION_X_MAX = 900;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
+var map = document.querySelector('.map');
+
 
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
@@ -64,3 +66,7 @@ var createArreyOfObject = function (numberOfObject) {
 };
 
 var ads = createArreyOfObject(NUMBER_OF_ADS);
+
+if (map.classList.contains('map--faded')) {
+  map.classList.remove('map--faded');
+}
