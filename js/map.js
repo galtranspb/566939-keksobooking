@@ -21,8 +21,8 @@ var LOCATION_X_MIN = 300;
 var LOCATION_X_MAX = 900;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
-// var MAP_PIN_WIDTH = 40;
-// var MAP_PIN_HEIGHT = 40;
+var MAP_PIN_WIDTH = 40;
+var MAP_PIN_HEIGHT = 40;
 
 var template = document.querySelector('template').content;
 var map = document.querySelector('.map');
@@ -63,8 +63,8 @@ var getArreyOfObject = function (numberOfObject) {
         photos: getRandomArrayItem(PHOTOS)
       },
       location: {
-        x: getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX),
-        y: getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX)
+        x: getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2,
+        y: getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX) + MAP_PIN_HEIGHT
       }
     });
   }
