@@ -24,11 +24,11 @@ var LOCATION_Y_MAX = 630;
 // var MAP_PIN_WIDTH = 40;
 // var MAP_PIN_HEIGHT = 40;
 
+var template = document.querySelector('template').content;
 var map = document.querySelector('.map');
 var pinList = document.querySelector('.map__pins');
-var TemplatePin = document.querySelector('template').content.querySelector('.map__pin');
-
-var TemplateAd = document.querySelector('template').content.querySelector('.map__card');
+var templatePin = template.querySelector('.map__pin');
+var templateAd = template.querySelector('.map__card');
 var nextSibling = document.querySelector('.map__filters-container');
 
 // Возвращает случайное целое число из диапозона min и max;
@@ -74,10 +74,8 @@ var getArreyOfObject = function (numberOfObject) {
 // Принимает массив объектов-объявлений ads.
 // Создает копию разметки маркера из шаблона TemplatePin. Определяет положение маркера, адрес изображения и текстовое
 //  содержимое альтернативного изображения в соответсвии со свойствами объекта, входящего в массив ads.
-
-// Функции, к-ые что-то возрващают, принято называть с приставкой get (getPopupPin)?
 var renderPopupPin = function (ads) {
-  var popupPin = TemplatePin.cloneNode(true);
+  var popupPin = templatePin.cloneNode(true);
 
   popupPin.style = 'left: ' + ads.location.x + 'px; top: ' + ads.location.y + 'px;';
   popupPin.querySelector('img').src = ads.author.avatar;
@@ -90,7 +88,7 @@ var renderPopupPin = function (ads) {
 // Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов в соответсвии со
 // свойствами объекта, входящего в массив ads.
 var renderAd = function (ads) {
-  var popupAd = TemplateAd.cloneNode(true);
+  var popupAd = templateAd.cloneNode(true);
 
   popupAd.querySelector('.popup__title').textContent = ads.offer.title;
   popupAd.querySelector('.popup__text--address').textContent = ads.offer.address;
