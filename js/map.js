@@ -92,9 +92,10 @@ var renderAd = function (ads) {
 
   popupAd.querySelector('.popup__title').textContent = ads.offer.title;
   popupAd.querySelector('.popup__text--address').textContent = ads.offer.address;
-  popupAd.querySelector('.popup__text--price').textContent = ads.offer.price;
+  popupAd.querySelector('.popup__text--price').textContent = ads.offer.price + 'Р/ночь';
   popupAd.querySelector('.popup__type').textContent = ads.offer.type;
-  popupAd.querySelector('.popup__text--capacity').textContent = ads.offer.rooms + ' для' + ads.offer.guests;
+  popupAd.querySelector('.popup__text--capacity').textContent = ads.offer.rooms + getDeclensionOfaRoom(ads.offer.rooms) +
+    ads.offer.guests + getDeclensionOfaGuests(ads.offer.guests);
   popupAd.querySelector('.popup__text--time').textContent =
   'заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
   popupAd.querySelector('.popup__features').textContent = ads.offer.features;
@@ -121,7 +122,20 @@ var createAds = function () {
   map.insertBefore(fragment, nextSibling);
 };
 
-// Функция корректировки острия маркера. Нужна ли она?
+// Принимает число. Склоняет существительное комната по числу комнат.
+var getDeclensionOfaRoom = function (number) {
+  if (number === 1) {
+    return ' комната для ';
+  } else if (number === 5) {
+    return ' комнат для ';
+  }
+  return ' комнаты для ';
+};
+
+// Принимает число. Склоняет существительное гость по числу гостей.
+var getDeclensionOfaGuests = function (number) {
+  return (number === 1) ? ' гостя' : ' гостей';
+};
 
 var ads = getArreyOfObject(NUMBER_OF_ADS);
 createPins();
