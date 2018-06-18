@@ -38,7 +38,18 @@ var getRandomIntByRange = function (min, max) {
 
 // Возвращает случайный элемент массива. Выборка берётся из входящего массива arr.
 var getRandomArrayItem = function (arr) {
-  return arr[getRandomIntByRange(0, arr.length)];
+  return arr[getRandomIntByRange(0, arr.length - 1)];
+};
+
+// Принимает два числа. Возвращает значение от -0.5 до 0.5 (не включительно).
+// Используется в методе сортировки массива в случайном порядке - arr.sort(fn);
+var getRandomOrder = function (_a, _b) {
+  return Math.random() - 0.5;
+};
+
+// Принимает массив. Возвращает копию массива произвольно длины от 0 до arr.length.
+var getArrOfRandomLenght = function (arr) {
+  return arr.slice(0, getRandomIntByRange(0, arr.length));
 };
 
 // Возварщает массив из объектов. Принимает количество объектов.
@@ -58,9 +69,9 @@ var getArreyOfObject = function (numberOfObject) {
         guests: getRandomIntByRange(MIN_GUESTS, MAX_GUESTS),
         checkin: getRandomArrayItem(CHECKIN),
         checkout: getRandomArrayItem(CHECKOUT),
-        features: getRandomArrayItem(FEATURES),
+        features: getArrOfRandomLenght(FEATURES),
         description: '',
-        photos: getRandomArrayItem(PHOTOS)
+        photos: PHOTOS.sort(getRandomOrder)
       },
       location: {
         x: getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2,
