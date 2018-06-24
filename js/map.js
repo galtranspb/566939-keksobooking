@@ -112,11 +112,42 @@ var getDeclensionOfaGuests = function (number) {
   return (number === 1) ? ' гостя' : ' гостей';
 };
 
+// Принимает объект.
+// Удаляет все дочерние элементы объекта.
+var deleteChildren = function (obj) {
+  while (obj.firstChild) {
+    obj.removeChild(obj.firstChild);
+  }
+};
+
+// Принимает имя тега, класса и сождержимое текста.
+// Возвращает элемент с тегом tagName, классом className и текстом text(если есть).
+var makeElement = function (tagName, className, text) {
+  var element = document.createElement(tagName);
+  element.classList.add(className);
+  if (text) {
+    element.textContent = text;
+  }
+  return element;
+};
+
+// Принимает объект и массив.
+// Удаляет дочерние элементы объекта и создает новые дочерние объекты, с классами из массива arr.
+var createNewChildren = function (obj, arr) {
+  deleteChildren(obj);
+  for (i = 0; i < arr.length; i++) {
+    var item = makeElement('li', 'popup__feature');
+    item.classList.add('popup__feature--' + arr[i]);
+    obj.appendChild(item);
+  }
+};
+
 // Принимает массив объектов-объявлений ads.
 // Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов в соответсвии со
 // свойствами объекта, входящего в массив ads.
 var renderAd = function (ads) {
   var popupAd = templateAd.cloneNode(true);
+  var features = template.querySelector('.popup__features');
   popupAd.querySelector('.popup__avatar').src = ads.author.avatar;
   popupAd.querySelector('.popup__title').textContent = ads.offer.title;
   popupAd.querySelector('.popup__text--address').textContent = ads.offer.address;
@@ -126,7 +157,7 @@ var renderAd = function (ads) {
   ads.offer.guests + getDeclensionOfaGuests(ads.offer.guests);
   popupAd.querySelector('.popup__text--time').textContent =
   'заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
-  popupAd.querySelector('.popup__features').textContent = ads.offer.features;
+  features = createNewChildren(features, ads.offer.features);
   popupAd.querySelector('.popup__photos').textContent = ads.offer.photos;
   return popupAd;
 };
@@ -194,7 +225,6 @@ var hideAd = function (index) {
 // Принимает событие-event
 // Если клик по маркеру, то показывает объявление с индексом, соотв. индексу маркера, по к-му был клик.
 // Если клик по кнопке закрыть, то закрывает объявление с индексом, соотв. индексу кнопке-закрыть.
-
 var onMapClick = function (evt) {
   for (i = 0; i < pinButtonList.length; i++) {
     if (pinButtonList[i] === evt.target) {
