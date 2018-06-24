@@ -57,7 +57,7 @@ var getArrOfRandomLenght = function (arr) {
 };
 
 // Возварщает массив из объектов. Принимает количество объектов.
-var getArreyOfObject = function (numberOfObject) {
+var getArrayOfObject = function (numberOfObject) {
   var array = [];
   for (var i = 0; i < numberOfObject; i++) {
     array.push({
@@ -99,12 +99,11 @@ var renderPopupPin = function (ads) {
 
 // Принимает число. Склоняет существительное комната по числу комнат.
 var getDeclensionOfaRoom = function (number) {
-  if (number === 1) {
-    return ' комната для ';
-  } else if (number === 5) {
-    return ' комнат для ';
+  switch (number) {
+    case 1: return ' комната для ';
+    case 5: return ' комнат для ';
+    default: return ' комнаты для ';
   }
-  return ' комнаты для ';
 };
 
 // Принимает число. Склоняет существительное гость по числу гостей.
@@ -180,7 +179,7 @@ var createAds = function () {
   map.insertBefore(fragment, nextSibling);
 };
 
-var ads = getArreyOfObject(NUMBER_OF_ADS);
+var ads = getArrayOfObject(NUMBER_OF_ADS);
 createPins();
 createAds();
 
