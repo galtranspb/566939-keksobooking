@@ -32,7 +32,11 @@ var templateAd = template.querySelector('.map__card');
 var nextSibling = document.querySelector('.map__filters-container');
 var form = document.querySelector('.ad-form');
 var pinMain = document.querySelector('.map__pin--main');
-var address = document.getElementById('address');
+var address = document.querySelector('#address');
+
+// var pinButtonList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+// var adList = document.querySelectorAll('.popup');
+// var adButtonClose = document.querySelectorAll('.popup__close');
 
 
 // Возвращает случайное целое число из диапозона min и max;
@@ -88,12 +92,12 @@ var getArrayOfObject = function (numberOfObject) {
 
 // Принимает массив объектов-объявлений ads.
 // Создает копию разметки маркера из шаблона TemplatePin. Определяет положение маркера, адрес изображения и текстовое
-//  содержимое альтернативного изображения в соответсвии со свойствами объекта, входящего в массив ads.
-var renderPopupPin = function (ads) {
+//  содержимое альтернативного изображения в соответсвии со свойствами объекта.
+var renderPopupPin = function (obj) {
   var popupPin = templatePin.cloneNode(true);
-  popupPin.style = 'left: ' + ads.location.x + 'px; top: ' + ads.location.y + 'px;';
-  popupPin.querySelector('img').src = ads.author.avatar;
-  popupPin.querySelector('img').alt = ads.offer.title;
+  popupPin.style = 'left: ' + obj.location.x + 'px; top: ' + obj.location.y + 'px;';
+  popupPin.querySelector('img').src = obj.author.avatar;
+  popupPin.querySelector('img').alt = obj.offer.title;
   return popupPin;
 };
 
@@ -134,7 +138,7 @@ var makeElement = function (tagName, className, text) {
 // Удаляет дочерние элементы объекта и создает новые дочерние объекты, с классами из массива arr.
 var createNewChildren = function (obj, arr) {
   deleteChildren(obj);
-  for (i = 0; i < arr.length; i++) {
+  for (var i = 0; i < arr.length; i++) {
     var item = makeElement('li', 'popup__feature');
     item.classList.add('popup__feature--' + arr[i]);
     obj.appendChild(item);
@@ -142,75 +146,67 @@ var createNewChildren = function (obj, arr) {
 };
 
 // Принимает массив объектов-объявлений ads.
-// Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов в соответсвии со
-// свойствами объекта, входящего в массив ads.
-var renderAd = function (ads) {
+// Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов, в соответсвии со
+// свойствами объекта.
+var renderAd = function (obj) {
   var popupAd = templateAd.cloneNode(true);
-  var features = template.querySelector('.popup__features');
-  popupAd.querySelector('.popup__avatar').src = ads.author.avatar;
-  popupAd.querySelector('.popup__title').textContent = ads.offer.title;
-  popupAd.querySelector('.popup__text--address').textContent = ads.offer.address;
-  popupAd.querySelector('.popup__text--price').textContent = ads.offer.price + 'Р/ночь';
-  popupAd.querySelector('.popup__type').textContent = ads.offer.type;
-  popupAd.querySelector('.popup__text--capacity').textContent = ads.offer.rooms + getDeclensionOfaRoom(ads.offer.rooms) +
-  ads.offer.guests + getDeclensionOfaGuests(ads.offer.guests);
+  var features = popupAd.querySelector('.popup__features');
+  popupAd.style = 'display: none;';
+  popupAd.querySelector('.popup__avatar').src = obj.author.avatar;
+  popupAd.querySelector('.popup__title').textContent = obj.offer.title;
+  popupAd.querySelector('.popup__text--address').textContent = obj.offer.address;
+  popupAd.querySelector('.popup__text--price').textContent = obj.offer.price + 'Р/ночь';
+  popupAd.querySelector('.popup__type').textContent = obj.offer.type;
+  popupAd.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + getDeclensionOfaRoom(obj.offer.rooms) +
+  obj.offer.guests + getDeclensionOfaGuests(obj.offer.guests);
   popupAd.querySelector('.popup__text--time').textContent =
-  'заезд после ' + ads.offer.checkin + ', выезд до ' + ads.offer.checkout;
-  features = createNewChildren(features, ads.offer.features);
-  popupAd.querySelector('.popup__photos').textContent = ads.offer.photos;
+  'заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
+  createNewChildren(features, obj.offer.features);
+  popupAd.querySelector('.popup__photos').textContent = obj.offer.photos;
   return popupAd;
 };
 
 // Отрисовывает сгенерированные DOM-элементы в блок .map-pins.
-var createPins = function () {
+var createPins = function (arr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < ads.length; i++) {
-    fragment.appendChild(renderPopupPin(ads[i]));
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(renderPopupPin(arr[i]));
   }
   pinList.appendChild(fragment);
 };
 
 // Отрисовывает сгенерированные DOM-элементы в блок .map(map) перед блоком .map__filters-cintainer(nextSibling).
-var createAds = function () {
+var createAds = function (arr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < ads.length; i++) {
-    fragment.appendChild(renderAd(ads[i]));
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(renderAd(arr[i]));
   }
   map.insertBefore(fragment, nextSibling);
 };
 
-var ads = getArrayOfObject(NUMBER_OF_ADS);
-createPins();
-createAds();
+// Передаёт в свойство value элемента address координаты курсора мыши.
+var showAddress = function (evt) {
+  address.value = evt.clientX + ' ' + evt.clientY;
+};
 
-
-// 4 задание.
-
-// Активирует карту, при перетаскивании метки и добавляет координаты метки в поле адреса.
-pinMain.addEventListener('mouseup', function (evt) {
+// Если у элемента map содержится класс map--faded, то удаляет этот класс.
+var activateMap = function () {
   if (map.classList.contains('map--faded')) {
     map.classList.remove('map--faded');
   }
+};
+
+// Если у элемента form содержится класс ad-form--disabled, то убирает этот класс.
+var activateForm = function () {
   if (form.classList.contains('ad-form--disabled')) {
     form.classList.remove('ad-form--disabled');
   }
-  address.value = evt.clientX + ' ' + evt.clientY;
-});
-
-
-var pinButtonList = map.querySelectorAll('.map__pin:not(.map__pin--main)');
-var adList = map.querySelectorAll('.popup');
-var adButtonClose = map.querySelectorAll('.popup__close');
-
-
-// скрыл все объявления.
-for (var i = 0; i < adList.length; i++) {
-  adList[i].style = 'display: none;';
-}
+};
 
 // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
 var showAd = function (index) {
-  for (i = 0; i < adList.length; i++) {
+  var adList = document.querySelectorAll('.popup');
+  for (var i = 0; i < adList.length; i++) {
     adList[i].style = 'display: none;';
   }
   adList[index].style = 'display: block;';
@@ -218,6 +214,7 @@ var showAd = function (index) {
 
 // Принимет индекс. Скрывает объявление с входящим индексом.
 var hideAd = function (index) {
+  var adList = document.querySelectorAll('.popup');
   adList[index].style = 'display: none;';
 };
 
@@ -225,7 +222,9 @@ var hideAd = function (index) {
 // Если клик по маркеру, то показывает объявление с индексом, соотв. индексу маркера, по к-му был клик.
 // Если клик по кнопке закрыть, то закрывает объявление с индексом, соотв. индексу кнопке-закрыть.
 var onMapClick = function (evt) {
-  for (i = 0; i < pinButtonList.length; i++) {
+  var pinButtonList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  var adButtonClose = document.querySelectorAll('.popup__close');
+  for (var i = 0; i < pinButtonList.length; i++) {
     if (pinButtonList[i] === evt.target) {
       showAd(i);
     }
@@ -237,35 +236,16 @@ var onMapClick = function (evt) {
   }
 };
 
+var ads = getArrayOfObject(NUMBER_OF_ADS);
+createAds(ads);
+
+// Активирует карту, при перетаскивании метки и добавляет координаты метки в поле адреса.
+pinMain.addEventListener('mouseup', function (evt) {
+  activateMap();
+  activateForm();
+  showAddress(evt);
+  createPins(ads);
+});
+
 // Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
-
-
-// Принимает массив и элемент-target
-// Возвращает элемент массива, если он соответсвует элементу-target
-// var getClickedElement = function (arr, target) {
-//   for(var i = 0; i < arr.length; i++) {
-//     if (arr[i] === target) {
-//       return arr[i];
-//     }
-//   }
-// };
-
-// var onMapClick = function (evt) {
-//   switch (evt.target) {
-//     case кнопка из pinButtonList: 'показать соответвующее окно из adList';
-//       break;
-//     case кнопка из adButtonClose: 'закрыть соотв окно adList'
-//       break;
-//   }
-// };
-
-// var onMapClick = function (evt) {
-
-//   switch (evt.target) {
-//     case getClickedElement(pinButtonList, evt.target): showAd();
-//       break;
-//     case getClickedElement(adButtonClose, evt.target): hideAd();
-//       break;
-//   }
-// };
