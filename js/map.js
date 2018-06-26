@@ -186,7 +186,7 @@ var createAds = function (arr) {
 
 // Передаёт в свойство value элемента address координаты курсора мыши.
 var showAddress = function (evt) {
-  address.value = evt.clientX + ' ' + evt.clientY;
+  address.value = evt.clientX + ', ' + evt.clientY;
 };
 
 // Если у элемента map содержится класс map--faded, то удаляет этот класс.
@@ -222,10 +222,10 @@ var hideAd = function (index) {
 // Если клик по маркеру, то показывает объявление с индексом, соотв. индексу маркера, по к-му был клик.
 // Если клик по кнопке закрыть, то закрывает объявление с индексом, соотв. индексу кнопке-закрыть.
 var onMapClick = function (evt) {
-  var pinButtonList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  var pinImageList = document.querySelectorAll('.map__pin:not(.map__pin--main) img');
   var adButtonClose = document.querySelectorAll('.popup__close');
-  for (var i = 0; i < pinButtonList.length; i++) {
-    if (pinButtonList[i] === evt.target) {
+  for (var i = 0; i < pinImageList.length; i++) {
+    if (pinImageList[i] === evt.target) {
       showAd(i);
     }
   }
@@ -241,6 +241,13 @@ createAds(ads);
 
 // Активирует карту, при перетаскивании метки и добавляет координаты метки в поле адреса.
 pinMain.addEventListener('mouseup', function (evt) {
+  activateMap();
+  activateForm();
+  showAddress(evt);
+  createPins(ads);
+});
+
+pinMain.removeEventListener('mouseup', function (evt) {
   activateMap();
   activateForm();
   showAddress(evt);
