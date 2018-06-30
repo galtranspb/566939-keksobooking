@@ -34,11 +34,6 @@ var form = document.querySelector('.ad-form');
 var pinMain = document.querySelector('.map__pin--main');
 var address = document.querySelector('#address');
 
-// var pinButtonList = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-// var adList = document.querySelectorAll('.popup');
-// var adButtonClose = document.querySelectorAll('.popup__close');
-
-
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -64,13 +59,15 @@ var getArrOfRandomLenght = function (arr) {
 var getArrayOfObject = function (numberOfObject) {
   var array = [];
   for (var i = 0; i < numberOfObject; i++) {
+    var x = getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2;
+    var y = getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX) + MAP_PIN_HEIGHT;
     array.push({
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
       offer: {
         title: getRandomArrayItem(TITLE),
-        address: 'location.x location.y',
+        address: x + ', ' + y,
         price: getRandomIntByRange(MIN_PRICE, MAX_PRICE),
         type: getRandomArrayItem(TYPE),
         rooms: getRandomIntByRange(MIN_ROOMS, MAX_ROOMS),
@@ -82,8 +79,8 @@ var getArrayOfObject = function (numberOfObject) {
         photos: PHOTOS.sort(getRandomOrder)
       },
       location: {
-        x: getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2,
-        y: getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX) + MAP_PIN_HEIGHT
+        x: x,
+        y: y
       }
     });
   }
