@@ -76,7 +76,7 @@ var getArrayOfObject = function (numberOfObject) {
         checkout: getRandomArrayItem(CHECKOUT),
         features: getArrOfRandomLenght(FEATURES),
         description: '',
-        photos: PHOTOS.sort(getRandomOrder)
+        photos: PHOTOS.slice().sort(getRandomOrder)
       },
       location: {
         x: x,
