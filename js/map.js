@@ -55,6 +55,11 @@ var getArrOfRandomLenght = function (arr) {
   return arr.slice(0, getRandomIntByRange(0, arr.length));
 };
 
+// Принимает мин и макс число. Возвращает случайное число от мин до макс, округлённое до 100.
+var getRoundingPriceToOneHundred = function (minNumber, maxNumber) {
+  return (getRandomIntByRange(minNumber, maxNumber) / 100).toFixed(0) * 100;
+};
+
 // Возварщает массив из объектов. Принимает количество объектов.
 var getArrayOfObject = function (numberOfObject) {
   var array = [];
@@ -68,7 +73,7 @@ var getArrayOfObject = function (numberOfObject) {
       offer: {
         title: getRandomArrayItem(TITLE),
         address: x + ', ' + y,
-        price: getRandomIntByRange(MIN_PRICE, MAX_PRICE),
+        price: getRoundingPriceToOneHundred(MIN_PRICE, MAX_PRICE),
         type: getRandomArrayItem(TYPE),
         rooms: getRandomIntByRange(MIN_ROOMS, MAX_ROOMS),
         guests: getRandomIntByRange(MIN_GUESTS, MAX_GUESTS),
