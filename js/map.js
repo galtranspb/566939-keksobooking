@@ -158,6 +158,17 @@ var copyNewChildren = function (obj, arr) {
   }
 };
 
+// Получает строку. Возвращает строку на русском, соответствующее входящей строке на английском.
+var getTranslatedType = function (string) {
+  switch (string) {
+    case 'palace': return 'Дворец';
+    case 'flat': return 'Квартира';
+    case 'house': return 'Дом';
+    case 'bungalo': return 'Бунгало';
+    default: return string;
+  }
+};
+
 // Принимает массив объектов-объявлений ads.
 // Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов, в соответсвии со
 // свойствами объекта.
@@ -168,7 +179,7 @@ var renderAd = function (obj) {
   popupAd.querySelector('.popup__title').textContent = obj.offer.title;
   popupAd.querySelector('.popup__text--address').textContent = obj.offer.address;
   popupAd.querySelector('.popup__text--price').textContent = obj.offer.price + 'Р/ночь';
-  popupAd.querySelector('.popup__type').textContent = obj.offer.type;
+  popupAd.querySelector('.popup__type').textContent = getTranslatedType(obj.offer.type);
   popupAd.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + getDeclensionOfaRoom(obj.offer.rooms) +
   obj.offer.guests + getDeclensionOfaGuests(obj.offer.guests);
   popupAd.querySelector('.popup__text--time').textContent =
