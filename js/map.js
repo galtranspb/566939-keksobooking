@@ -259,6 +259,34 @@ var onMapClick = function (evt) {
   }
 };
 
+// Принимает значение. Устанавливает полю формы "Цена за ночь" минимальную цену и плейсхолдер.
+var setMinPrice = function (value) {
+  form.price.min = value;
+  form.price.placeholder = value;
+};
+
+// Принимает строку.
+// Устанавливает минимальную цену и плейсхолдер из выбранных вариантов, в зависимости от входящей строки.
+var setPriceProperties = function (string) {
+  switch (string) {
+    case 'bungalo': return setMinPrice(0);
+    case 'flat': return setMinPrice(1000);
+    case 'house': return setMinPrice(5000);
+    case 'palace': return setMinPrice(10000);
+    default: return form.price.placeholder;
+  }
+};
+
+// Устанавливает полю формы "Цена за ночь" минимальную цену и плейсходер, в зависимости от выбранного поля "Тип жилья"
+var onSelectTypeChange = function () {
+  var select = form.type.options;
+  for (var i = 0; i < select.length; i++) {
+    if (select[i].selected) {
+      setPriceProperties(select[i].value);
+    }
+  }
+};
+
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
 
@@ -279,3 +307,6 @@ pinMain.removeEventListener('mouseup', function (evt) {
 
 // Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
+
+// Обработчик выбора в списке "Тип жилья".
+form.type.addEventListener('change', onSelectTypeChange);
