@@ -287,79 +287,59 @@ var onSelectTypeChange = function () {
   }
 };
 
+// ******************************************************************
 
-// Валидация поля "кол-во мест":
-// 1. Отследить изменение выбора кол-ва комнат
-//   form.rooms.addEventListener('change', onSelectRoomsChange(select));
-// 2. Передать выбранное значение поля "кол-во комнат" в функцию устанвоки требований к валидации поля "кол-во мест"
-//    setCapacityValidation()
-// 3. Установить эти требования в обработчике события invalid поля "кол-во мест".
-//    form.capacity.addEventListener('invalid', onSelectCapacityInvalid);
+// var roomsList = form.rooms.options;
+// [1, 2, 3, 100] - комнаты
+// 0 - 1 комната
+// 1 - 2 комнаты
+// 2 - 3 комнаты
+// 3 - 100 комнат
 
+// var capacityList = form.capacity.options;
+// [3, 2, 1, notForGuests] - гости
+// 0 - 3 гостя
+// 1 - 2 гостя
+// 2 - 1 гость
+// 3 - не для гостей
 
+// выбрана 1 комната - условие ошибки: (!1 гость)                    selectedIndex в capacityList = 2
+// выбраны 2 комнаты - условие ошибки: (3 гостя || не для гостей)    selectedIndex в capacityList = 0 или 3
+// выбраны 3 комнаты - условие ошибки: (не для гостей)               selectedIndex в capacityList = 3
+// выбраны 100 комнат - условие ошибки: (!не для гостей)             selectedIndex в capacityList = 3
 
-
-
-// Принимает массив. Возвращает элемент массива со свойством selected.
-var onSelectRoomsChange = function (arr) {
-  // var select = form.rooms.options;
-  for (var i = 0; i < arr.length; i++) {
-    if (arr[i].selected) {
-      return arr[i];
-    }
-  }
-};
-
-
-// Принимает число комнат.
-// Устанваливает правила валидации к объектау form.сapacity (списка выбора кол-ва мест),
-// в зависимости от входящего выбранного количества комнат.
-var setCapacityValidation = function (rooms) {
-  switch (rooms) {
-    case '1':
-      // Как ограничить выбор диапопзона или установаить свою кастомную ошибку?
-      // например form.capacity.validity.свояОшибка
-      form.capacity.setCustomValidity('Для 1 комнаты допустимое количество гостей - 1'); /*Показать сообщение с ошибкой*/
-      break;
-    case '2':
-      form.capacity.setCustomValidity('Для 2 комнат допустимое количество гостей - 1 или 2');
-      break;
-    case '3':
-    form.capacity.setCustomValidity('Для 3 комнат допустимое количество гостей - 1, 2 или 3');
-      break;
-    case '100':
-      form.capacity.setCustomValidity('Для 100 комнат допустимое количество гостей - "не для гостей"');
-      break;
-    default:
-      userNameInput.setCustomValidity('');
-  }
-};
-
-// Устанавливает колисество гостей в зависимости от выбранного количества комнат.
+// Обработчик события invalid в поле "количество мест"
+// В соответствии с выбранным кол-вом комнат, устанавливает правила валидации для поля "количество мест".
 var onSelectCapacityInvalid = function () {
-  var select = form.rooms.options; /*коллекция списка select - выбора количества комнат*/
-  var option = form.rooms.options[0]; /*Изначально выбор утстановлен в разметке на 1 элементе списка селект.*/
-  option = form.rooms.addEventListener('change', onSelectRoomsChange(select)); /*подписался на изменение выбора кол-ва комнат.*/
-  //  if (form.rooms.options[0].value) { /*если значение кол-во комнат = 1*/
-  //   // Как ограничить выбор диапопзона или установаить свою кастомную ошибку?
-  //   // например form.capacity.validity.свояОшибка
-  //   form.capacity.setCustomValidity('Для 1 комнаты допустимое количество гостей - 1'); /*Показать сообщение с ошибкой*/
-  // } else if (form.rooms.options[1].value) {
-  //     form.capacity.setCustomValidity('Для 2 комнат допустимое количество гостей - 1 или 2');
-  // } else if (form.rooms.options[2].value) {
-  //   form.capacity.setCustomValidity('Для 3 комнат допустимое количество гостей - 1, 2 или 3');
-  // } else if (form.rooms.options[3].value) {
-  //   form.capacity.setCustomValidity('Для 100 комнат допустимое количество гостей - "не для гостей"');
-  // } else {
-  //   userNameInput.setCustomValidity('');
-  // }
-  setCapacityValidation(option.value);
+  var roomsIndex = form.rooms.options.selectedIndex;
+  var guestsIndex = form.capacity.options.selectedIndex;
+  if (roomsIndex === 0) {
+    if (guestsIndex !== 2) {
+      form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
+    }
+  } else if (roomsIndex === 1) {
+    if (guestsIndex === 0 || guestsIndex === 3) {
+      form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
+    }
+  } else if (roomsIndex === 2) {
+    if (guestsIndex === 3) {
+      form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
+    }
+  } else if (roomsIndex === 3) {
+    if (guestsIndex !== 3) {
+      form.capacity.setCustomValidity('Для 100 комнат соответствуют не "для гостей"');
+    }
+  } else {
+    form.capacity.setCustomValidity('');
+  }
 };
 
+// Событие сhange в поле "кол-во комнат" запускает обработчик события invalid в поле "количество мест".
+var onSelectRoomsChange = function () {
+  form.capacity.addEventListener('invalid', onSelectCapacityInvalid);
+};
 
-
-
-
+// **********************************************************************
 
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
@@ -382,8 +362,8 @@ pinMain.removeEventListener('mouseup', function (evt) {
 // Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
 
-// Обработчик выбора в списке "Тип жилья".
+// Обработчик события change в списке "Тип жилья".
 form.type.addEventListener('change', onSelectTypeChange);
 
-// Обработчик выбора в списке "Количество мест".
-form.capacity.addEventListener('invalid', onSelectCapacityInvalid);
+// Обработчик события change в списке "Количество комнат".
+form.rooms.addEventListener('change', onSelectRoomsChange);
