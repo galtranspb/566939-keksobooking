@@ -265,25 +265,15 @@ var setMinPrice = function (value) {
   form.price.placeholder = value;
 };
 
-// Принимает строку.
-// Устанавливает минимальную цену и плейсхолдер из выбранных вариантов, в зависимости от входящей строки.
-var setPriceProperties = function (string) {
-  switch (string) {
-    case 'bungalo': return setMinPrice(0);
-    case 'flat': return setMinPrice(1000);
-    case 'house': return setMinPrice(5000);
-    case 'palace': return setMinPrice(10000);
-    default: return form.price.placeholder;
-  }
-};
-
 // Устанавливает полю формы "Цена за ночь" минимальную цену и плейсходер, в зависимости от выбранного поля "Тип жилья"
 var onSelectTypeChange = function () {
-  var select = form.type.options;
-  for (var i = 0; i < select.length; i++) {
-    if (select[i].selected) {
-      setPriceProperties(select[i].value);
-    }
+  var index = form.type.selectedIndex;
+  switch (index) {
+    case 0: return setMinPrice(0);
+    case 1: return setMinPrice(1000);
+    case 2: return setMinPrice(5000);
+    case 3: return setMinPrice(10000);
+    default: return setMinPrice(1000);
   }
 };
 
@@ -310,34 +300,29 @@ var onSelectTypeChange = function () {
 
 // Обработчик события invalid в поле "количество мест"
 // В соответствии с выбранным кол-вом комнат, устанавливает правила валидации для поля "количество мест".
-var onSelectCapacityInvalid = function () {
-  var roomsIndex = form.rooms.options.selectedIndex;
-  var guestsIndex = form.capacity.options.selectedIndex;
-  if (roomsIndex === 0) {
-    if (guestsIndex !== 2) {
-      form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
-    }
-  } else if (roomsIndex === 1) {
-    if (guestsIndex === 0 || guestsIndex === 3) {
-      form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
-    }
-  } else if (roomsIndex === 2) {
-    if (guestsIndex === 3) {
-      form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
-    }
-  } else if (roomsIndex === 3) {
-    if (guestsIndex !== 3) {
-      form.capacity.setCustomValidity('Для 100 комнат соответствуют не "для гостей"');
-    }
-  } else {
-    form.capacity.setCustomValidity('');
-  }
-};
-
-// Событие сhange в поле "кол-во комнат" запускает обработчик события invalid в поле "количество мест".
-var onSelectRoomsChange = function () {
-  form.capacity.addEventListener('invalid', onSelectCapacityInvalid);
-};
+// var onSelectCapacityInvalid = function () {
+//   var roomsIndex = form.rooms.selectedIndex;
+//   var guestsIndex = form.capacity.selectedIndex;
+//   if (roomsIndex === 0) {
+//     if (guestsIndex !== 2) {
+//       form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
+//     }
+//   } else if (roomsIndex === 1) {
+//     if (guestsIndex === 0 || guestsIndex === 3) {
+//       form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
+//     }
+//   } else if (roomsIndex === 2) {
+//     if (guestsIndex === 3) {
+//       form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
+//     }
+//   } else if (roomsIndex === 3) {
+//     if (guestsIndex !== 3) {
+//       form.capacity.setCustomValidity('Для 100 комнат соответствуют не "для гостей"');
+//     }
+//   } else {
+//     form.capacity.setCustomValidity('');
+//   }
+// };
 
 // **********************************************************************
 
@@ -365,5 +350,15 @@ map.addEventListener('click', onMapClick);
 // Обработчик события change в списке "Тип жилья".
 form.type.addEventListener('change', onSelectTypeChange);
 
-// Обработчик события change в списке "Количество комнат".
-form.rooms.addEventListener('change', onSelectRoomsChange);
+// Обработчик события input в поле "Цена за ночь".
+form.price.addEventListener('input', onSelectTypeChange);
+
+// Обработчик события change в списке "Время заезда".
+form.timein.addEventListener('change', function () {
+  form.timeout.value = form.timein.value;
+});
+
+// Обработчик события change в списке "Время выезда".
+form.timeout.addEventListener('change', function () {
+  form.timein.value = form.timeout.value;
+});
