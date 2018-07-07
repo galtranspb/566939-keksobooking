@@ -298,31 +298,61 @@ var onSelectTypeChange = function () {
 // выбраны 3 комнаты - условие ошибки: (не для гостей)               selectedIndex в capacityList = 3
 // выбраны 100 комнат - условие ошибки: (!не для гостей)             selectedIndex в capacityList = 3
 
-// Обработчик события invalid в поле "количество мест"
-// В соответствии с выбранным кол-вом комнат, устанавливает правила валидации для поля "количество мест".
-// var onSelectCapacityInvalid = function () {
-//   var roomsIndex = form.rooms.selectedIndex;
-//   var guestsIndex = form.capacity.selectedIndex;
-//   if (roomsIndex === 0) {
-//     if (guestsIndex !== 2) {
-//       form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
-//     }
-//   } else if (roomsIndex === 1) {
-//     if (guestsIndex === 0 || guestsIndex === 3) {
-//       form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
-//     }
-//   } else if (roomsIndex === 2) {
-//     if (guestsIndex === 3) {
-//       form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
-//     }
-//   } else if (roomsIndex === 3) {
-//     if (guestsIndex !== 3) {
-//       form.capacity.setCustomValidity('Для 100 комнат соответствуют не "для гостей"');
-//     }
-//   } else {
-//     form.capacity.setCustomValidity('');
-//   }
-// };
+// Проверкa поля "кол-во мест".
+var checkCapacity = function () {
+  var rooms = form.rooms.selectedIndex;
+  var capacity = form.capacity.selectedIndex;
+  switch (rooms) {
+    case 0:
+      if (capacity !== 2) {
+        form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
+        return false;
+      }
+      break;
+    case 1:
+      if (capacity === 0 || capacity === 3) {
+        form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
+        return false;
+      }
+      break;
+    case 2:
+      if (capacity === 3) {
+        form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
+        return false;
+      }
+      break;
+    case 3:
+      if (capacity !== 3) {
+        form.capacity.setCustomValidity('Для 100 комнат соответствует опция "не для гостей"');
+        return false;
+      }
+      break;
+    default:
+      form.capacity.setCustomValidity('');
+      return true;
+  }
+};
+
+// Если у элемента ошибка валидации, то подсвечивает элемент тенью
+var showInvalidFields = function () {
+  for (var i = 0; i < form.elements.length; i++) {
+    if (form.elements[i].validity.valid === false) {
+      form.elements[i].style.webkitBoxShadow = '0 0 2px 2px #000';
+      form.elements[i].style.boxShadow = '0 0 2px 2px #000';
+    } else {
+      form.elements[i].style.webkitBoxShadow = '';
+      form.elements[i].style.boxShadow = '';
+    }
+  }
+};
+
+// Если не проходит проверка в checkCapacity, то отменяется отправка формы и показываются неправильно заполненные поля.
+var onFormSubmit = function (evt) {
+  if (!checkCapacity()) {
+    evt.preventDefault();
+    showInvalidFields();
+  }
+};
 
 // **********************************************************************
 
@@ -362,3 +392,6 @@ form.timein.addEventListener('change', function () {
 form.timeout.addEventListener('change', function () {
   form.timein.value = form.timeout.value;
 });
+
+// Обработчик события submit на форме.
+form.addEventListener('submit', onFormSubmit);
