@@ -34,6 +34,13 @@ var form = document.querySelector('.ad-form');
 var pinMain = document.querySelector('.map__pin--main');
 var address = document.querySelector('#address');
 
+var Price = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -266,71 +273,72 @@ var setMinPrice = function (value) {
 };
 
 // Устанавливает полю формы "Цена за ночь" минимальную цену и плейсходер, в зависимости от выбранного поля "Тип жилья"
-var onSelectTypeChange = function () {
-  var index = form.type.selectedIndex;
-  switch (index) {
-    case 0: return setMinPrice(0);
-    case 1: return setMinPrice(1000);
-    case 2: return setMinPrice(5000);
-    case 3: return setMinPrice(10000);
-    default: return setMinPrice(1000);
+var onTypeChange = function () {
+  var value = form.type.value;
+  switch (value) {
+    case 'bungalo': return setMinPrice(Price.bungalo);
+    case 'flat': return setMinPrice(Price.flat);
+    case 'house': return setMinPrice(Price.house);
+    case 'palace': return setMinPrice(Price.palace);
+    default: return setMinPrice(Price.flat);
   }
 };
 
 // ******************************************************************
 
-// var roomsList = form.rooms.options;
+// var roomsList = form.rooms.value;
 // [1, 2, 3, 100] - комнаты
-// 0 - 1 комната
-// 1 - 2 комнаты
-// 2 - 3 комнаты
-// 3 - 100 комнат
+// 1 - 1 комната
+// 2 - 2 комнаты
+// 3 - 3 комнаты
+// 100 - 100 комнат
 
-// var capacityList = form.capacity.options;
+// var capacityList = form.capacity.value;
 // [3, 2, 1, notForGuests] - гости
-// 0 - 3 гостя
-// 1 - 2 гостя
-// 2 - 1 гость
-// 3 - не для гостей
+// 3 - 3 гостя
+// 2 - 2 гостя
+// 1 - 1 гость
+// 0 - не для гостей
 
-// выбрана 1 комната - условие ошибки: (!1 гость)                    selectedIndex в capacityList = 2
-// выбраны 2 комнаты - условие ошибки: (3 гостя || не для гостей)    selectedIndex в capacityList = 0 или 3
-// выбраны 3 комнаты - условие ошибки: (не для гостей)               selectedIndex в capacityList = 3
-// выбраны 100 комнат - условие ошибки: (!не для гостей)             selectedIndex в capacityList = 3
+// выбрана 1 комната - условие ошибки: (!1 гость)                    value в capacityList = 1
+// выбраны 2 комнаты - условие ошибки: (3 гостя || не для гостей)    value в capacityList = 3 или 0
+// выбраны 3 комнаты - условие ошибки: (не для гостей)               value в capacityList = 0
+// выбраны 100 комнат - условие ошибки: (!не для гостей)             value в capacityList = 0
 
 // Проверкa поля "кол-во мест".
-var checkCapacity = function () {
-  var rooms = form.rooms.selectedIndex;
-  var capacity = form.capacity.selectedIndex;
+var onRoomsChange = function () {
+  var rooms = form.rooms.value;
+  var capacity = form.capacity.value;
+  var errorMessage = '';
   switch (rooms) {
-    case 0:
-      if (capacity !== 2) {
-        form.capacity.setCustomValidity('Для 1 комнаты соответсвует 1 гость');
-        return false;
+    case '1':
+      if (capacity !== '1') {
+        errorMessage = 'Для 1 комнаты соответсвует 1 гость';
       }
       break;
-    case 1:
-      if (capacity === 0 || capacity === 3) {
-        form.capacity.setCustomValidity('Для 2 комнат соответсвуют 1 или 2 гостя');
-        return false;
+    case '2':
+      if (capacity === '3' || capacity === '0') {
+        errorMessage = 'Для 2 комнат соответсвуют 1 или 2 гостя';
       }
       break;
-    case 2:
-      if (capacity === 3) {
-        form.capacity.setCustomValidity('Для 3 комнат соответствуют 1, 2 или 3 гостя');
-        return false;
+    case '3':
+      if (capacity === '0') {
+        errorMessage = 'Для 3 комнат соответствуют 1, 2 или 3 гостя';
       }
       break;
-    case 3:
-      if (capacity !== 3) {
-        form.capacity.setCustomValidity('Для 100 комнат соответствует опция "не для гостей"');
-        return false;
+    case '100':
+      if (capacity !== '0') {
+        errorMessage = 'Для 100 комнат соответствует опция "не для гостей"';
       }
       break;
     default:
-      form.capacity.setCustomValidity('');
-      return true;
+      errorMessage = '';
   }
+  form.capacity.setCustomValidity(errorMessage);
+  if (errorMessage) {
+    return false;
+  }
+  return true;
 };
 
 // Если у элемента ошибка валидации, то подсвечивает элемент тенью
@@ -346,10 +354,15 @@ var showInvalidFields = function () {
   }
 };
 
-// Если не проходит проверка в checkCapacity, то отменяется отправка формы и показываются неправильно заполненные поля.
+// Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то
+// отправляет форму, иначе - показывает поля с ошибками.
 var onFormSubmit = function (evt) {
-  if (!checkCapacity()) {
-    evt.preventDefault();
+  evt.preventDefault();
+  form.rooms.addEventListener('change', onRoomsChange);
+  form.capacity.addEventListener('change', onRoomsChange);
+  if (onRoomsChange()) {
+    form.submit();
+  } else {
     showInvalidFields();
   }
 };
@@ -378,10 +391,10 @@ pinMain.removeEventListener('mouseup', function (evt) {
 map.addEventListener('click', onMapClick);
 
 // Обработчик события change в списке "Тип жилья".
-form.type.addEventListener('change', onSelectTypeChange);
+form.type.addEventListener('change', onTypeChange);
 
 // Обработчик события input в поле "Цена за ночь".
-form.price.addEventListener('input', onSelectTypeChange);
+form.price.addEventListener('input', onTypeChange);
 
 // Обработчик события change в списке "Время заезда".
 form.timein.addEventListener('change', function () {
