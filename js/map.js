@@ -34,6 +34,13 @@ var form = document.querySelector('.ad-form');
 var pinMain = document.querySelector('.map__pin--main');
 var address = document.querySelector('#address');
 
+var Price = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -259,6 +266,88 @@ var onMapClick = function (evt) {
   }
 };
 
+// Принимает значение. Устанавливает полю формы "Цена за ночь" минимальную цену и плейсхолдер.цена жилья
+var setMinPrice = function (value) {
+  form.price.min = value;
+  form.price.placeholder = value;
+};
+
+// Устанавливает полю формы "Цена за ночь" минимальную цену и плейсходер, в зависимости от выбранного поля "Тип жилья"
+var onTypeChange = function () {
+  var value = form.type.value;
+  switch (value) {
+    case 'bungalo': return setMinPrice(Price.bungalo);
+    case 'flat': return setMinPrice(Price.flat);
+    case 'house': return setMinPrice(Price.house);
+    case 'palace': return setMinPrice(Price.palace);
+    default: return setMinPrice(Price.flat);
+  }
+};
+
+// Синхронизирует поля кол-во комнат и кол-во гостей по соответсвующим правилам.
+var onRoomsChange = function () {
+  var rooms = form.rooms.value;
+  var capacity = form.capacity.value;
+  var errorMessage = '';
+  switch (rooms) {
+    case '1':
+      if (capacity !== '1') {
+        errorMessage = 'Для 1 комнаты соответсвует 1 гость';
+      }
+      break;
+    case '2':
+      if (capacity === '3' || capacity === '0') {
+        errorMessage = 'Для 2 комнат соответсвуют 1 или 2 гостя';
+      }
+      break;
+    case '3':
+      if (capacity === '0') {
+        errorMessage = 'Для 3 комнат соответствуют 1, 2 или 3 гостя';
+      }
+      break;
+    case '100':
+      if (capacity !== '0') {
+        errorMessage = 'Для 100 комнат соответствует опция "не для гостей"';
+      }
+      break;
+    default:
+      errorMessage = '';
+  }
+  form.capacity.setCustomValidity(errorMessage);
+  if (errorMessage) {
+    return false;
+  }
+  return true;
+};
+
+// Если у элемента ошибка валидации, то подсвечивает элемент тенью
+var showInvalidFields = function () {
+  for (var i = 0; i < form.elements.length; i++) {
+    if (form.elements[i].validity.valid === false) {
+      form.elements[i].style.webkitBoxShadow = '0 0 2px 2px #000';
+      form.elements[i].style.boxShadow = '0 0 2px 2px #000';
+    } else {
+      form.elements[i].style.webkitBoxShadow = '';
+      form.elements[i].style.boxShadow = '';
+    }
+  }
+};
+
+// Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то
+// отправляет форму, иначе - показывает поля с ошибками.
+var onFormSubmit = function (evt) {
+  evt.preventDefault();
+  form.rooms.addEventListener('change', onRoomsChange);
+  form.capacity.addEventListener('change', onRoomsChange);
+  if (onRoomsChange()) {
+    form.submit();
+  } else {
+    showInvalidFields();
+  }
+};
+
+// **********************************************************************
+
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
 
@@ -279,3 +368,22 @@ pinMain.removeEventListener('mouseup', function (evt) {
 
 // Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
+
+// Обработчик события change в списке "Тип жилья".
+form.type.addEventListener('change', onTypeChange);
+
+// Обработчик события input в поле "Цена за ночь".
+form.price.addEventListener('input', onTypeChange);
+
+// Обработчик события change в списке "Время заезда".
+form.timein.addEventListener('change', function () {
+  form.timeout.value = form.timein.value;
+});
+
+// Обработчик события change в списке "Время выезда".
+form.timeout.addEventListener('change', function () {
+  form.timein.value = form.timeout.value;
+});
+
+// Обработчик события submit на форме.
+form.addEventListener('submit', onFormSubmit);
