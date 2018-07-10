@@ -363,9 +363,17 @@ var onPinMainMousedown = function (evt) {
   var onDocumentMousemove = function (moveEvt) {
     moveEvt.preventDefault();
 
+    var getLimitedPinMovement = function (startCoord, mouseCoord, lessThan, moreThan) {
+      if (mouseCoord < lessThan || mouseCoord > moreThan) {
+        return 0;
+      } else {
+        return startCoord - mouseCoord;
+      }
+    };
+
     var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
+      x: getLimitedPinMovement(startCoords.x, moveEvt.clientX, 80, 1200),
+      y: getLimitedPinMovement(startCoords.y, moveEvt.clientY, 130, 630)
     };
 
     startCoords = {
