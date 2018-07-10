@@ -359,28 +359,28 @@ var onPinMainMousedown = function (evt) {
     y: evt.clientY
   };
 
-// Обработчик mousmove на document
-  var onDocumentMousemove = function (evt) {
-    evt.preventDefault();
+  // Обработчик mousmove на document
+  var onDocumentMousemove = function (moveEvt) {
+    moveEvt.preventDefault();
 
     var shift = {
-      x: startCoords.x - evt.clientX,
-      y: startCoords.y - evt.clientY
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
     };
 
     startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
     };
 
     pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
     pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-    showAddress(evt);
+    showAddress(moveEvt);
   };
 
-// Обработчик mouseup на document
-  var onDocumentMouseup = function (evt) {
-    evt.preventDefault();
+  // Обработчик mouseup на document
+  var onDocumentMouseup = function (upEvt) {
+    upEvt.preventDefault();
     document.removeEventListener('mousemove', onDocumentMousemove);
     document.removeEventListener('mouseup', onDocumentMouseup);
   };
