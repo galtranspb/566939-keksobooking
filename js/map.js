@@ -41,11 +41,6 @@ var Price = {
   palace: 10000
 };
 
-var startCoords = {
-  x: pinMain.offsetLeft,
-  y: pinMain.offsetTop
-};
-
 // *****************************************Определения функций****************************************
 
 // Возвращает случайное целое число из диапозона min и max;
@@ -354,35 +349,42 @@ var onFormSubmit = function (evt) {
 };
 
 // ************************************задание 5*****************************************
-// Обработчик mousmove на document
-var onDocumentMousemove = function (evt) {
-  evt.preventDefault();
-
-  var shift = {
-    x: startCoords.x - evt.clientX,
-    y: startCoords.y - evt.clientY
-  };
-
-  startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-
-  pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
-  pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-  showAddress(evt);
-};
-
-// Обработчик mouseup на document
-var onDocumentMouseup = function (evt) {
-  evt.preventDefault();
-  document.removeEventListener('mousemove', onDocumentMousemove);
-  document.removeEventListener('mouseup', onDocumentMouseup);
-};
 
 // Обработчик mousedown на pinMain
 var onPinMainMousedown = function (evt) {
   evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+// Обработчик mousmove на document
+  var onDocumentMousemove = function (evt) {
+    evt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - evt.clientX,
+      y: startCoords.y - evt.clientY
+    };
+
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+    showAddress(evt);
+  };
+
+// Обработчик mouseup на document
+  var onDocumentMouseup = function (evt) {
+    evt.preventDefault();
+    document.removeEventListener('mousemove', onDocumentMousemove);
+    document.removeEventListener('mouseup', onDocumentMouseup);
+  };
+
   document.addEventListener('mousemove', onDocumentMousemove);
   document.addEventListener('mouseup', onDocumentMouseup);
 };
