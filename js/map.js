@@ -363,18 +363,22 @@ var onPinMainMousedown = function (evt) {
   var onDocumentMousemove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var getLimitedPinMovement = function (startCoord, mouseCoord, lessThan, moreThan) {
-      if (mouseCoord < lessThan || mouseCoord > moreThan) {
-        return 0;
-      } else {
-        return startCoord - mouseCoord;
-      }
+    var shift = {
+      x: 0,
+      y: 0
     };
 
-    var shift = {
-      x: getLimitedPinMovement(startCoords.x, moveEvt.clientX, 80, 1200),
-      y: getLimitedPinMovement(startCoords.y, moveEvt.clientY, 130, 630)
-    };
+    if (moveEvt.pageX < 80 || moveEvt.pageX > 1200) {
+      document.removeEventListener('mousemove', onDocumentMousemove);
+    } else {
+      shift.x = startCoords.x - moveEvt.clientX;
+    }
+
+    if (moveEvt.pageY < 130 || moveEvt.pageY > 630) {
+      document.removeEventListener('mousemove', onDocumentMousemove);
+    } else {
+      shift.y = startCoords.y - moveEvt.clientY;
+    }
 
     startCoords = {
       x: moveEvt.clientX,
