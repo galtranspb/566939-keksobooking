@@ -41,6 +41,13 @@ var Price = {
   palace: 10000
 };
 
+var startCoords = {
+  x: pinMain.offsetLeft,
+  y: pinMain.offsetTop
+};
+
+// *****************************************Определения функций****************************************
+
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
@@ -259,9 +266,9 @@ var onMapClick = function (evt) {
       showAd(i);
     }
   }
-  for (i = 0; i < adButtonClose.length; i++) {
-    if (adButtonClose[i] === evt.target) {
-      hideAd(i);
+  for (var j = 0; j < adButtonClose.length; j++) {
+    if (adButtonClose[j] === evt.target) {
+      hideAd(j);
     }
   }
 };
@@ -346,12 +353,45 @@ var onFormSubmit = function (evt) {
   }
 };
 
-// **********************************************************************
+// ************************************задание 5*****************************************
+// Обработчик mousmove на document
+var onDocumentMousemove = function (evt) {
+  evt.preventDefault();
+
+  var shift = {
+    x: startCoords.x - evt.clientX,
+    y: startCoords.y - evt.clientY
+  };
+
+  startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
+  pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+  showAddress(evt);
+};
+
+// Обработчик mouseup на document
+var onDocumentMouseup = function (evt) {
+  evt.preventDefault();
+  document.removeEventListener('mousemove', onDocumentMousemove);
+  document.removeEventListener('mouseup', onDocumentMouseup);
+};
+
+// Обработчик mousedown на pinMain
+var onPinMainMousedown = function (evt) {
+  evt.preventDefault();
+  document.addEventListener('mousemove', onDocumentMousemove);
+  document.addEventListener('mouseup', onDocumentMouseup);
+};
+
+// *******************************Вызов функций***************************************
 
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
 
-// Активирует карту, при перетаскивании метки и добавляет координаты метки в поле адреса.
 pinMain.addEventListener('mouseup', function (evt) {
   activateMap();
   activateForm();
@@ -366,24 +406,20 @@ pinMain.removeEventListener('mouseup', function (evt) {
   createPins(ads);
 });
 
-// Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
 
-// Обработчик события change в списке "Тип жилья".
 form.type.addEventListener('change', onTypeChange);
 
-// Обработчик события input в поле "Цена за ночь".
 form.price.addEventListener('input', onTypeChange);
 
-// Обработчик события change в списке "Время заезда".
 form.timein.addEventListener('change', function () {
   form.timeout.value = form.timein.value;
 });
 
-// Обработчик события change в списке "Время выезда".
 form.timeout.addEventListener('change', function () {
   form.timein.value = form.timeout.value;
 });
 
-// Обработчик события submit на форме.
 form.addEventListener('submit', onFormSubmit);
+
+pinMain.addEventListener('mousedown', onPinMainMousedown);
