@@ -217,8 +217,8 @@ var createAds = function (arr) {
 };
 
 // Передаёт в свойство value элемента address координаты курсора мыши.
-var showAddress = function (evt) {
-  address.value = evt.clientX + ', ' + evt.clientY;
+var showAddress = function (el) {
+  address.value = el.offsetLeft + ', ' + el.offsetTop;
 };
 
 // Если у элемента map содержится класс map--faded, то удаляет этот класс.
@@ -368,14 +368,16 @@ var onPinMainMousedown = function (evt) {
       y: 0
     };
 
-    if (moveEvt.pageX < 80 || moveEvt.pageX > 1200) {
-      document.removeEventListener('mousemove', onDocumentMousemove);
+    if (moveEvt.pageX < 200 || moveEvt.pageX > 1000) {
+      shift.x = 0;
+
     } else {
-      shift.x = startCoords.x - moveEvt.clientX;
+      shift.x = startCoords.x - moveEvt.pageX;
     }
 
     if (moveEvt.pageY < 130 || moveEvt.pageY > 630) {
-      document.removeEventListener('mousemove', onDocumentMousemove);
+      shift.y = 0;
+
     } else {
       shift.y = startCoords.y - moveEvt.clientY;
     }
@@ -387,7 +389,7 @@ var onPinMainMousedown = function (evt) {
 
     pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
     pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
-    showAddress(moveEvt);
+    showAddress(pinMain);
   };
 
   // Обработчик mouseup на document
@@ -406,17 +408,17 @@ var onPinMainMousedown = function (evt) {
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
 
-pinMain.addEventListener('mouseup', function (evt) {
+pinMain.addEventListener('mouseup', function () {
   activateMap();
   activateForm();
-  showAddress(evt);
+  showAddress(pinMain);
   createPins(ads);
 });
 
-pinMain.removeEventListener('mouseup', function (evt) {
+pinMain.removeEventListener('mouseup', function () {
   activateMap();
   activateForm();
-  showAddress(evt);
+  showAddress(pinMain);
   createPins(ads);
 });
 
