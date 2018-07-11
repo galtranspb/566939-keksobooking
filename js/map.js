@@ -41,6 +41,8 @@ var Price = {
   palace: 10000
 };
 
+var isMapActive = false;
+
 // *****************************************Определения функций****************************************
 
 // Возвращает случайное целое число из диапозона min и max;
@@ -235,6 +237,14 @@ var activateForm = function () {
   }
 };
 
+var initiateMap = function () {
+  isMapActive = true;
+  activateMap();
+  activateForm();
+  showAddress(pinMain);
+  createPins(ads);
+};
+
 // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
 var showAd = function (index) {
   var adList = document.querySelectorAll('.popup');
@@ -370,14 +380,12 @@ var onPinMainMousedown = function (evt) {
 
     if (moveEvt.pageX < 200 || moveEvt.pageX > 1000) {
       shift.x = 0;
-
     } else {
       shift.x = startCoords.x - moveEvt.pageX;
     }
 
     if (moveEvt.pageY < 130 || moveEvt.pageY > 630) {
       shift.y = 0;
-
     } else {
       shift.y = startCoords.y - moveEvt.clientY;
     }
@@ -395,6 +403,9 @@ var onPinMainMousedown = function (evt) {
   // Обработчик mouseup на document
   var onDocumentMouseup = function (upEvt) {
     upEvt.preventDefault();
+    if (!isMapActive) {
+      initiateMap();
+    }
     document.removeEventListener('mousemove', onDocumentMousemove);
     document.removeEventListener('mouseup', onDocumentMouseup);
   };
@@ -407,20 +418,6 @@ var onPinMainMousedown = function (evt) {
 
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
-
-pinMain.addEventListener('mouseup', function () {
-  activateMap();
-  activateForm();
-  showAddress(pinMain);
-  createPins(ads);
-});
-
-pinMain.removeEventListener('mouseup', function () {
-  activateMap();
-  activateForm();
-  showAddress(pinMain);
-  createPins(ads);
-});
 
 map.addEventListener('click', onMapClick);
 
