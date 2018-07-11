@@ -4,25 +4,39 @@ var NUMBER_OF_ADS = 8;
 var TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
   'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var MIN_PRICE = 1000;
-var MAX_PRICE = 1000000;
+var PRICE = {
+  MIN: 1000,
+  MAX: 1000000
+};
 var TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var MIN_ROOMS = 1;
-var MAX_ROOMS = 5;
-var MIN_GUESTS = 1;
-var MAX_GUESTS = 5;
+var ROOMS = {
+  MIN: 1,
+  MAX: 5
+};
+var GUESTS = {
+  MIN: 1,
+  MAX: 5
+};
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var LOCATION_X_MIN = 300;
-var LOCATION_X_MAX = 900;
-var LOCATION_Y_MIN = 130;
-var LOCATION_Y_MAX = 630;
-var MAP_PIN_WIDTH = 40;
-var MAP_PIN_HEIGHT = 40;
+var LOCATION = {
+  X: {
+    MIN: 300,
+    MAX: 900
+  },
+  Y: {
+    MIN: 130,
+    MAX: 630
+  }
+};
+var MAP_PIN = {
+  WIDTH: 40,
+  HEIGHT: 40
+};
 
 var map = document.querySelector('.map');
 var pinList = document.querySelector('.map__pins');
@@ -75,8 +89,8 @@ var getRoundingPriceToOneHundred = function (minNumber, maxNumber) {
 var getArrayOfObject = function (numberOfObject) {
   var array = [];
   for (var i = 0; i < numberOfObject; i++) {
-    var x = getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2;
-    var y = getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX) + MAP_PIN_HEIGHT;
+    var x = getRandomIntByRange(LOCATION.X.MIN, LOCATION.X.MAX) + MAP_PIN.WIDTH / 2;
+    var y = getRandomIntByRange(LOCATION.Y.MIN, LOCATION.Y.MAX) + MAP_PIN.HEIGHT;
     array.push({
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
@@ -84,10 +98,10 @@ var getArrayOfObject = function (numberOfObject) {
       offer: {
         title: getRandomArrayItem(TITLE),
         address: x + ', ' + y,
-        price: getRoundingPriceToOneHundred(MIN_PRICE, MAX_PRICE),
+        price: getRoundingPriceToOneHundred(PRICE.MIN, PRICE.MAX),
         type: getRandomArrayItem(TYPE),
-        rooms: getRandomIntByRange(MIN_ROOMS, MAX_ROOMS),
-        guests: getRandomIntByRange(MIN_GUESTS, MAX_GUESTS),
+        rooms: getRandomIntByRange(ROOMS.MIN, ROOMS.MAX),
+        guests: getRandomIntByRange(GUESTS.MIN, GUESTS.MAX),
         checkin: getRandomArrayItem(CHECKIN),
         checkout: getRandomArrayItem(CHECKOUT),
         features: getArrOfRandomLenght(FEATURES),
