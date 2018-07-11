@@ -4,25 +4,39 @@ var NUMBER_OF_ADS = 8;
 var TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
   'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
   'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var MIN_PRICE = 1000;
-var MAX_PRICE = 1000000;
+var PRICE = {
+  MIN: 1000,
+  MAX: 1000000
+};
 var TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var MIN_ROOMS = 1;
-var MAX_ROOMS = 5;
-var MIN_GUESTS = 1;
-var MAX_GUESTS = 5;
+var ROOMS = {
+  MIN: 1,
+  MAX: 5
+};
+var GUESTS = {
+  MIN: 1,
+  MAX: 5
+};
 var CHECKIN = ['12:00', '13:00', '14:00'];
 var CHECKOUT = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var LOCATION_X_MIN = 300;
-var LOCATION_X_MAX = 900;
-var LOCATION_Y_MIN = 130;
-var LOCATION_Y_MAX = 630;
-var MAP_PIN_WIDTH = 40;
-var MAP_PIN_HEIGHT = 40;
+var LOCATION = {
+  X: {
+    MIN: 300,
+    MAX: 900
+  },
+  Y: {
+    MIN: 130,
+    MAX: 630
+  }
+};
+var MAP_PIN = {
+  WIDTH: 40,
+  HEIGHT: 40
+};
 
 var map = document.querySelector('.map');
 var pinList = document.querySelector('.map__pins');
@@ -40,6 +54,10 @@ var Price = {
   house: 5000,
   palace: 10000
 };
+
+var isMapActive = false;
+
+// *****************************************Определения функций****************************************
 
 // Возвращает случайное целое число из диапозона min и max;
 var getRandomIntByRange = function (min, max) {
@@ -71,8 +89,8 @@ var getRoundingPriceToOneHundred = function (minNumber, maxNumber) {
 var getArrayOfObject = function (numberOfObject) {
   var array = [];
   for (var i = 0; i < numberOfObject; i++) {
-    var x = getRandomIntByRange(LOCATION_X_MIN, LOCATION_X_MAX) + MAP_PIN_WIDTH / 2;
-    var y = getRandomIntByRange(LOCATION_Y_MIN, LOCATION_Y_MAX) + MAP_PIN_HEIGHT;
+    var x = getRandomIntByRange(LOCATION.X.MIN, LOCATION.X.MAX) + MAP_PIN.WIDTH / 2;
+    var y = getRandomIntByRange(LOCATION.Y.MIN, LOCATION.Y.MAX) + MAP_PIN.HEIGHT;
     array.push({
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
@@ -80,10 +98,10 @@ var getArrayOfObject = function (numberOfObject) {
       offer: {
         title: getRandomArrayItem(TITLE),
         address: x + ', ' + y,
-        price: getRoundingPriceToOneHundred(MIN_PRICE, MAX_PRICE),
+        price: getRoundingPriceToOneHundred(PRICE.MIN, PRICE.MAX),
         type: getRandomArrayItem(TYPE),
-        rooms: getRandomIntByRange(MIN_ROOMS, MAX_ROOMS),
-        guests: getRandomIntByRange(MIN_GUESTS, MAX_GUESTS),
+        rooms: getRandomIntByRange(ROOMS.MIN, ROOMS.MAX),
+        guests: getRandomIntByRange(GUESTS.MIN, GUESTS.MAX),
         checkin: getRandomArrayItem(CHECKIN),
         checkout: getRandomArrayItem(CHECKOUT),
         features: getArrOfRandomLenght(FEATURES),
@@ -215,8 +233,8 @@ var createAds = function (arr) {
 };
 
 // Передаёт в свойство value элемента address координаты курсора мыши.
-var showAddress = function (evt) {
-  address.value = evt.clientX + ', ' + evt.clientY;
+var showAddress = function (el) {
+  address.value = el.offsetLeft + ', ' + el.offsetTop;
 };
 
 // Если у элемента map содержится класс map--faded, то удаляет этот класс.
@@ -231,6 +249,14 @@ var activateForm = function () {
   if (form.classList.contains('ad-form--disabled')) {
     form.classList.remove('ad-form--disabled');
   }
+};
+
+var initiateMap = function () {
+  isMapActive = true;
+  activateMap();
+  activateForm();
+  showAddress(pinMain);
+  createPins(ads);
 };
 
 // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
@@ -259,9 +285,9 @@ var onMapClick = function (evt) {
       showAd(i);
     }
   }
-  for (i = 0; i < adButtonClose.length; i++) {
-    if (adButtonClose[i] === evt.target) {
-      hideAd(i);
+  for (var j = 0; j < adButtonClose.length; j++) {
+    if (adButtonClose[j] === evt.target) {
+      hideAd(j);
     }
   }
 };
@@ -346,44 +372,71 @@ var onFormSubmit = function (evt) {
   }
 };
 
-// **********************************************************************
+// ************************************задание 5*****************************************
+
+// Обработчик mousedown на pinMain
+var onPinMainMousedown = function (evt) {
+  evt.preventDefault();
+
+  // Обработчик mousmove на document
+  var onDocumentMousemove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var coord = {
+      x: pinMain.offsetLeft + moveEvt.movementX,
+      y: pinMain.offsetTop + moveEvt.movementY
+    };
+
+    if (coord.x < LOCATION.X.MIN) {
+      coord.x = LOCATION.X.MIN;
+    } else if (coord.x > LOCATION.X.MAX) {
+      coord.x = LOCATION.X.MAX;
+    }
+
+    if (coord.y < LOCATION.Y.MIN) {
+      coord.y = LOCATION.Y.MIN;
+    } else if (coord.y > LOCATION.Y.MAX) {
+      coord.y = LOCATION.Y.MAX;
+    }
+
+    pinMain.style.top = coord.y + 'px';
+    pinMain.style.left = coord.x + 'px';
+    showAddress(pinMain);
+  };
+
+  // Обработчик mouseup на document
+  var onDocumentMouseup = function (upEvt) {
+    upEvt.preventDefault();
+    if (!isMapActive) {
+      initiateMap();
+    }
+    document.removeEventListener('mousemove', onDocumentMousemove);
+    document.removeEventListener('mouseup', onDocumentMouseup);
+  };
+
+  document.addEventListener('mousemove', onDocumentMousemove);
+  document.addEventListener('mouseup', onDocumentMouseup);
+};
+
+// *******************************Вызов функций***************************************
 
 var ads = getArrayOfObject(NUMBER_OF_ADS);
 createAds(ads);
 
-// Активирует карту, при перетаскивании метки и добавляет координаты метки в поле адреса.
-pinMain.addEventListener('mouseup', function (evt) {
-  activateMap();
-  activateForm();
-  showAddress(evt);
-  createPins(ads);
-});
-
-pinMain.removeEventListener('mouseup', function (evt) {
-  activateMap();
-  activateForm();
-  showAddress(evt);
-  createPins(ads);
-});
-
-// Обработчик клика по карте.
 map.addEventListener('click', onMapClick);
 
-// Обработчик события change в списке "Тип жилья".
 form.type.addEventListener('change', onTypeChange);
 
-// Обработчик события input в поле "Цена за ночь".
 form.price.addEventListener('input', onTypeChange);
 
-// Обработчик события change в списке "Время заезда".
 form.timein.addEventListener('change', function () {
   form.timeout.value = form.timein.value;
 });
 
-// Обработчик события change в списке "Время выезда".
 form.timeout.addEventListener('change', function () {
   form.timein.value = form.timeout.value;
 });
 
-// Обработчик события submit на форме.
 form.addEventListener('submit', onFormSubmit);
+
+pinMain.addEventListener('mousedown', onPinMainMousedown);
