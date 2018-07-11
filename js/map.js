@@ -392,13 +392,13 @@ var onPinMainMousedown = function (evt) {
       y: 0
     };
 
-    if (moveEvt.pageX < 200 || moveEvt.pageX > 1000) {
+    if (moveEvt.pageX < LOCATION.X.MIN || moveEvt.pageX > LOCATION.X.MAX) {
       shift.x = 0;
     } else {
       shift.x = startCoords.x - moveEvt.pageX;
     }
 
-    if (moveEvt.pageY < 130 || moveEvt.pageY > 630) {
+    if (moveEvt.pageY < LOCATION.Y.MIN || moveEvt.pageY > LOCATION.Y.MAX) {
       shift.y = 0;
     } else {
       shift.y = startCoords.y - moveEvt.clientY;
