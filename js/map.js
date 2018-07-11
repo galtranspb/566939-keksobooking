@@ -378,39 +378,29 @@ var onFormSubmit = function (evt) {
 var onPinMainMousedown = function (evt) {
   evt.preventDefault();
 
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
-
   // Обработчик mousmove на document
   var onDocumentMousemove = function (moveEvt) {
     moveEvt.preventDefault();
 
-    var shift = {
-      x: 0,
-      y: 0
+    var coord = {
+      x: pinMain.offsetLeft + moveEvt.movementX,
+      y: pinMain.offsetTop + moveEvt.movementY
     };
 
-    if (moveEvt.pageX < LOCATION.X.MIN || moveEvt.pageX > LOCATION.X.MAX) {
-      shift.x = 0;
-    } else {
-      shift.x = startCoords.x - moveEvt.pageX;
+    if (coord.x < LOCATION.X.MIN) {
+      coord.x = LOCATION.X.MIN;
+    } else if (coord.x > LOCATION.X.MAX) {
+      coord.x = LOCATION.X.MAX;
     }
 
-    if (moveEvt.pageY < LOCATION.Y.MIN || moveEvt.pageY > LOCATION.Y.MAX) {
-      shift.y = 0;
-    } else {
-      shift.y = startCoords.y - moveEvt.clientY;
+    if (coord.y < LOCATION.Y.MIN) {
+      coord.y = LOCATION.Y.MIN;
+    } else if (coord.y > LOCATION.Y.MAX) {
+      coord.y = LOCATION.Y.MAX;
     }
 
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
-
-    pinMain.style.top = (pinMain.offsetTop - shift.y) + 'px';
-    pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
+    pinMain.style.top = coord.y + 'px';
+    pinMain.style.left = coord.x + 'px';
     showAddress(pinMain);
   };
 
