@@ -30,7 +30,7 @@
     activateMap();
     activateForm();
     showAddress(pinMain);
-    window.createPins(window.data);
+    window.renderPins(window.data);
   };
 
   // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
