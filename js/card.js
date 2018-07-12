@@ -2,11 +2,18 @@
 
 (function () {
 
+  var TranslatedTypeOfHousing = {
+    'palace': 'Дворец',
+    'flat': 'Квартира',
+    'house': 'Дом',
+    'bungalo': 'Бунгало'
+  };
+
   var templateAd = window.lib.template.querySelector('.map__card');
   var nextSibling = document.querySelector('.map__filters-container');
 
   // Принимает число. Склоняет существительное комната по числу комнат.
-  var getDeclensionOfaRoom = function (number) {
+  var getDeclensionOfRoom = function (number) {
     switch (number) {
       case 1: return ' комната для ';
       case 5: return ' комнат для ';
@@ -15,7 +22,7 @@
   };
 
   // Принимает число. Склоняет существительное гость по числу гостей.
-  var getDeclensionOfaGuests = function (number) {
+  var getDeclensionOfGuests = function (number) {
     return (number === 1) ? ' гостя' : ' гостей';
   };
 
@@ -60,17 +67,6 @@
     }
   };
 
-  // Получает строку. Возвращает строку на русском, соответствующее входящей строке на английском.
-  var getTranslatedType = function (string) {
-    switch (string) {
-      case 'palace': return 'Дворец';
-      case 'flat': return 'Квартира';
-      case 'house': return 'Дом';
-      case 'bungalo': return 'Бунгало';
-      default: return string;
-    }
-  };
-
   // Принимает массив объектов-объявлений ads.
   // Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов, в соответсвии со
   // свойствами объекта.
@@ -81,9 +77,9 @@
     popupAd.querySelector('.popup__title').textContent = obj.offer.title;
     popupAd.querySelector('.popup__text--address').textContent = obj.offer.address;
     popupAd.querySelector('.popup__text--price').textContent = obj.offer.price + 'Р/ночь';
-    popupAd.querySelector('.popup__type').textContent = getTranslatedType(obj.offer.type);
-    popupAd.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + getDeclensionOfaRoom(obj.offer.rooms) +
-    obj.offer.guests + getDeclensionOfaGuests(obj.offer.guests);
+    popupAd.querySelector('.popup__type').textContent = TranslatedTypeOfHousing[obj.offer.type];
+    popupAd.querySelector('.popup__text--capacity').textContent = obj.offer.rooms + getDeclensionOfRoom(obj.offer.rooms) +
+    obj.offer.guests + getDeclensionOfGuests(obj.offer.guests);
     popupAd.querySelector('.popup__text--time').textContent =
     'заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
     createNewChildren(popupAd.querySelector('.popup__features'), obj.offer.features);
