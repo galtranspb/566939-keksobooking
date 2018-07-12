@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анатолий Соколов](https://up.htmlacademy.ru/javascript/14/user/566939).
-* Наставник: [Анна Тюрина](https://up.htmlacademy.ru/javascript/14/user/549147).
+* Наставник: [Александр Смирнов](https://up.htmlacademy.ru/javascript/14/user/516117).
 
 ---
 
