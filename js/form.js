@@ -18,13 +18,7 @@
   // Устанавливает полю формы "Цена за ночь" минимальную цену и плейсходер, в зависимости от выбранного поля "Тип жилья"
   var onTypeChange = function () {
     var value = window.lib.form.type.value;
-    switch (value) {
-      case 'bungalo': return setMinPrice(Price.bungalo);
-      case 'flat': return setMinPrice(Price.flat);
-      case 'house': return setMinPrice(Price.house);
-      case 'palace': return setMinPrice(Price.palace);
-      default: return setMinPrice(Price.flat);
-    }
+    return setMinPrice(Price[value]);
   };
 
   // Синхронизирует поля кол-во комнат и кол-во гостей по соответсвующим правилам.
