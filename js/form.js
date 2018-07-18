@@ -74,7 +74,7 @@
   };
 
   // кэлбэк на успешную отправку формы. Переводит карту и форму в неактивное состояние.
-  var onSuccessSave = function (_response) {
+  var onSuccessSave = function () {
     window.lib.isMapActive = false;
     window.lib.map.classList.add('map--faded');
     window.lib.form.classList.add('ad-form--disabled');

@@ -12,15 +12,16 @@
 
   var onSuccessLoad = function (data) {
     ads = data;
+    window.renderPins(ads);
+    window.renderAds(ads);
   };
 
   var initiateMap = function () {
     window.lib.isMapActive = true;
     window.lib.map.classList.remove('map--faded');
     window.lib.form.classList.remove('ad-form--disabled');
+    window.backend.load(onSuccessLoad, window.lib.onError);
     showAddress(pinMain);
-    window.renderPins(ads);
-    window.renderAds(ads);
   };
 
   // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
@@ -100,7 +101,7 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
-  window.backend.load(onSuccessLoad, window.lib.onError);
+  // window.backend.load(onSuccessLoad, window.lib.onError);
   window.lib.map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
 

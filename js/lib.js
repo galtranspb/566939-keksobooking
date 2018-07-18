@@ -6,7 +6,6 @@
   var onError = function (errorMessage) {
     var element = document.createElement('div');
     element.textContent = errorMessage;
-    // element.style = 'position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 50%; padding: 30px 0;';
     element.style = 'font-size: 30px; text-align: center; background-color: #ccc; color: red;';
     element.style.position = 'fixed';
     element.style.zIndex = '100';
