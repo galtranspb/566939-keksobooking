@@ -2,6 +2,7 @@
 
 (function () {
 
+  // обработчик ошибок
   var onError = function (errorMessage) {
     var element = document.createElement('div');
     element.textContent = errorMessage;
@@ -19,6 +20,7 @@
 
   window.lib = {
     isMapActive: false,
+    NUMBER_OF_ADS: 8,
 
     LOCATION: {
       X: {

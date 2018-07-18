@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
+  var ads = [];
 
-  // var isMapActive = false;
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
 
@@ -10,12 +10,17 @@
     address.value = el.offsetLeft + ', ' + el.offsetTop;
   };
 
+  var onSuccessLoad = function (data) {
+    ads = data;
+  };
+
   var initiateMap = function () {
     window.lib.isMapActive = true;
     window.lib.map.classList.remove('map--faded');
     window.lib.form.classList.remove('ad-form--disabled');
     showAddress(pinMain);
-    window.renderPins(window.data);
+    window.renderPins(ads);
+    window.renderAds(ads);
   };
 
   // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
@@ -95,6 +100,7 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
+  window.backend.load(onSuccessLoad, window.lib.onError);
   window.lib.map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
 
