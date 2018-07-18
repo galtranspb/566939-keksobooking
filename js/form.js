@@ -9,6 +9,9 @@
     palace: 10000
   };
 
+  var ESC_KEYCODE = 27;
+  var success = document.querySelector('.success');
+
   // Принимает значение. Устанавливает полю формы "Цена за ночь" минимальную цену и плейсхолдер.цена жилья
   var setMinPrice = function (value) {
     window.lib.form.price.min = value;
@@ -70,6 +73,7 @@
     }
   };
 
+  // кэлбэк на успешную отправку формы. Переводит карту и форму в неактивное состояние.
   var onSuccessSave = function (_response) {
     window.lib.isMapActive = false;
     window.lib.map.classList.add('map--faded');
@@ -77,6 +81,7 @@
     window.lib.form.reset();
   };
 
+  // Удаляет созданные пины и объявления
   var clearMap = function () {
     var pinList = document.querySelector('.map__pins');
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -86,6 +91,29 @@
       pinList.removeChild(pins[i]);
       window.lib.map.removeChild(ads[i]);
     }
+  };
+
+  // Обработчик нажатия клавиши ESC.
+  var onSuccessEscPress = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      success.classList.add('hidden');
+      success.removeEventListener('click', onSuccessClick);
+      window.removeEventListener('keydown', onSuccessEscPress);
+    }
+  };
+
+  // Обработчик события клик на элементе success.
+  var onSuccessClick = function () {
+    success.classList.add('hidden');
+    success.removeEventListener('click', onSuccessClick);
+    window.removeEventListener('keydown', onSuccessEscPress);
+  };
+
+  // Показывает сообщение об успешной отправке формы
+  var showSuccessMessage = function () {
+    success.classList.remove('hidden');
+    success.addEventListener('click', onSuccessClick);
+    window.addEventListener('keydown', onSuccessEscPress);
   };
 
   // Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то
@@ -98,6 +126,7 @@
     if (onRoomsChange()) {
       window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
       clearMap();
+      showSuccessMessage();
     } else {
       showInvalidFields();
     }
