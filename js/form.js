@@ -70,14 +70,22 @@
     }
   };
 
+  var onSuccessSave = function (_response) {
+    window.lib.isMapActive = false;
+    window.lib.map.classList.add('map--faded');
+    window.lib.form.classList.add('ad-form--disabled');
+    window.lib.form.reset();
+  };
+
   // Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то
   // отправляет форму, иначе - показывает поля с ошибками.
   var onFormSubmit = function (evt) {
     evt.preventDefault();
     window.lib.form.rooms.addEventListener('change', onRoomsChange);
     window.lib.form.capacity.addEventListener('change', onRoomsChange);
+
     if (onRoomsChange()) {
-      window.lib.form.submit();
+      window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
     } else {
       showInvalidFields();
     }

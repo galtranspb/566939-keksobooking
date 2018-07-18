@@ -90,23 +90,12 @@
 
   // window.data = getArrayOfObject(NUMBER_OF_ADS);
 
+
   window.data = [];
   var onSuccessLoad = function (ads) {
     window.data = ads;
   };
 
-  var onErrorLoad = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  window.backend.load(onSuccessLoad, onErrorLoad);
+  window.backend.load(onSuccessLoad, window.lib.onError);
 
 })();

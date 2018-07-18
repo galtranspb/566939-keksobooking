@@ -5,7 +5,6 @@
   var templatePin = window.lib.template.querySelector('.map__pin');
   var pinList = document.querySelector('.map__pins');
 
-
   // Принимает объект объявлений ads.
   // Создает копию разметки маркера из шаблона TemplatePin. Определяет положение маркера, адрес изображения и текстовое
   //  содержимое альтернативного изображения в соответсвии со свойствами объекта.
