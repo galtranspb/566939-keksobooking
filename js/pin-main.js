@@ -1,36 +1,27 @@
 'use strict';
 
 (function () {
+  var ads = [];
 
-  var isMapActive = false;
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
 
-  // Если у элемента map содержится класс map--faded, то удаляет этот класс.
-  var activateMap = function () {
-    if (window.lib.map.classList.contains('map--faded')) {
-      window.lib.map.classList.remove('map--faded');
-    }
-  };
-
-  // Если у элемента form содержится класс ad-form--disabled, то убирает этот класс.
-  var activateForm = function () {
-    if (window.lib.form.classList.contains('ad-form--disabled')) {
-      window.lib.form.classList.remove('ad-form--disabled');
-    }
-  };
-
-  // Передаёт в свойство value элемента address координаты курсора мыши.
   var showAddress = function (el) {
     address.value = el.offsetLeft + ', ' + el.offsetTop;
   };
 
+  var onSuccessLoad = function (data) {
+    ads = data;
+    window.renderPins(ads);
+    window.renderAds(ads);
+  };
+
   var initiateMap = function () {
-    isMapActive = true;
-    activateMap();
-    activateForm();
+    window.lib.isMapActive = true;
+    window.lib.map.classList.remove('map--faded');
+    window.lib.form.classList.remove('ad-form--disabled');
+    window.backend.load(onSuccessLoad, window.lib.onError);
     showAddress(pinMain);
-    window.renderPins(window.data);
   };
 
   // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
@@ -99,7 +90,7 @@
     // Обработчик mouseup на document
     var onDocumentMouseup = function (upEvt) {
       upEvt.preventDefault();
-      if (!isMapActive) {
+      if (!window.lib.isMapActive) {
         initiateMap();
       }
       document.removeEventListener('mousemove', onDocumentMousemove);
@@ -110,6 +101,7 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
+  // window.backend.load(onSuccessLoad, window.lib.onError);
   window.lib.map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
 
