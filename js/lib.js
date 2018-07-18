@@ -20,7 +20,7 @@
 
   window.lib = {
     isMapActive: false,
-    NUMBER_OF_ADS: 8,
+    NUMBER_OF_ADS: 10,
 
     LOCATION: {
       X: {

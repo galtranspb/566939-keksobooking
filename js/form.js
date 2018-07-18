@@ -77,6 +77,17 @@
     window.lib.form.reset();
   };
 
+  var clearMap = function () {
+    var pinList = document.querySelector('.map__pins');
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var ads = document.querySelectorAll('.popup');
+
+    for (var i = 0; i < window.lib.NUMBER_OF_ADS; i++) {
+      pinList.removeChild(pins[i]);
+      window.lib.map.removeChild(ads[i]);
+    }
+  };
+
   // Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то
   // отправляет форму, иначе - показывает поля с ошибками.
   var onFormSubmit = function (evt) {
@@ -86,6 +97,7 @@
 
     if (onRoomsChange()) {
       window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
+      clearMap();
     } else {
       showInvalidFields();
     }

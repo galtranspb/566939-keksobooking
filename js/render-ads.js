@@ -70,7 +70,7 @@
   // Принимает массив объектов-объявлений ads.
   // Создает копию разметки объявления из шаблона TemplateAd. Определяет содержимое выбранных элементов, в соответсвии со
   // свойствами объекта.
-  var createAd = function (obj) {
+  var getAd = function (obj) {
     var popupAd = templateAd.cloneNode(true);
     popupAd.style = 'display: none;';
     popupAd.querySelector('.popup__avatar').src = obj.author.avatar;
@@ -90,8 +90,8 @@
   // Отрисовывает сгенерированные DOM-элементы в блок .map(map) перед блоком .map__filters-cintainer(nextSibling).
   window.renderAds = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      fragment.appendChild(createAd(arr[i]));
+    for (var i = 0; i < window.lib.NUMBER_OF_ADS; i++) {
+      fragment.appendChild(getAd(arr[i]));
     }
     window.lib.map.insertBefore(fragment, nextSibling);
   };
