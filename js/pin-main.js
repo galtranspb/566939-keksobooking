@@ -6,15 +6,35 @@
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
 
+  var housingType = document.querySelector('[name="housing-type"]');
+
   var showAddress = function (el) {
     address.value = el.offsetLeft + ', ' + el.offsetTop;
   };
 
+  var filters = function (obj) {
+    return (obj.offer.type === housingType.value) || (housingType.value === 'any');
+  };
+
+  var deletePins = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var pinList = document.querySelector('.map__pins');
+
+    for (var i = 0; i < pins.length; i++) {
+      pinList.removeChild(pins[i]);
+    }
+  };
+
+  var onFilterChange = function () {
+    deletePins();
+    window.renderPins(ads.filter(filters));
+    window.renderAds(ads.filter(filters));
+  };
+
   var onSuccessLoad = function (data) {
-    var housingType = document.querySelector('[name="housing-type"]');
-    ads = data.filter(window.filters);
-    window.renderPins(ads);
-    window.renderAds(ads);
+    ads = data;
+    window.renderPins(ads.filter(filters));
+    window.renderAds(ads.filter(filters));
   };
 
   var initiateMap = function () {
@@ -105,5 +125,7 @@
   // window.backend.load(onSuccessLoad, window.lib.onError);
   window.lib.map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
+    housingType.addEventListener('change', onFilterChange);
+
 
 })();
