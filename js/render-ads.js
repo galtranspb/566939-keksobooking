@@ -90,7 +90,7 @@
   // Отрисовывает сгенерированные DOM-элементы в блок .map(map) перед блоком .map__filters-cintainer(nextSibling).
   window.renderAds = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.lib.NUMBER_OF_ADS; i++) {
+    for (var i = 0; i < arr.length; i++) {
       fragment.appendChild(getAd(arr[i]));
     }
     window.lib.map.insertBefore(fragment, nextSibling);

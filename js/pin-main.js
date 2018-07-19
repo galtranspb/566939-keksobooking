@@ -11,7 +11,8 @@
   };
 
   var onSuccessLoad = function (data) {
-    ads = data;
+    var housingType = document.querySelector('[name="housing-type"]');
+    ads = data.filter(window.filters);
     window.renderPins(ads);
     window.renderAds(ads);
   };
