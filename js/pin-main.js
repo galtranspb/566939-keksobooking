@@ -19,9 +19,11 @@
   var deletePins = function () {
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     var pinList = document.querySelector('.map__pins');
+    var popup = window.lib.map.querySelectorAll('.popup');
 
     for (var i = 0; i < pins.length; i++) {
       pinList.removeChild(pins[i]);
+      window.lib.map.removeChild(popup[i]);
     }
   };
 
