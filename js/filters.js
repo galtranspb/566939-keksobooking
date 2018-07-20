@@ -68,12 +68,12 @@
     window.filteredData = originalData.filter(combinedFilter);
   };
 
-  var onFilterChange = function () {
+  var onFilterChange = window.debounce(function () {
     window.filteredData = originalData.filter(combinedFilter);
     window.lib.deleteElements();
     window.renderPins(window.filteredData);
     window.renderAds(window.filteredData);
-  };
+  });
 
   window.backend.load(onSuccessLoad, window.lib.onError);
   filterForm.addEventListener('change', onFilterChange);
