@@ -81,18 +81,6 @@
     window.lib.form.reset();
   };
 
-  // Удаляет созданные пины и объявления
-  var clearMap = function () {
-    var pinList = document.querySelector('.map__pins');
-    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var ads = document.querySelectorAll('.popup');
-
-    for (var i = 0; i < window.lib.NUMBER_OF_ADS; i++) {
-      pinList.removeChild(pins[i]);
-      window.lib.map.removeChild(ads[i]);
-    }
-  };
-
   // Обработчик нажатия клавиши ESC.
   var onSuccessEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -125,7 +113,7 @@
 
     if (onRoomsChange()) {
       window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
-      clearMap();
+      window.lib.deleteElements();
       showSuccessMessage();
     } else {
       showInvalidFields();

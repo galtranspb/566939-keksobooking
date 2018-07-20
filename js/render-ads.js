@@ -83,6 +83,7 @@
     popupAd.querySelector('.popup__text--time').textContent =
     'заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
     createNewChildren(popupAd.querySelector('.popup__features'), obj.offer.features);
+    popupAd.querySelector('.popup__description').textContent = obj.offer.description;
     copyNewChildren(popupAd.querySelector('.popup__photos'), obj.offer.photos);
     return popupAd;
   };
@@ -90,7 +91,7 @@
   // Отрисовывает сгенерированные DOM-элементы в блок .map(map) перед блоком .map__filters-cintainer(nextSibling).
   window.renderAds = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < window.lib.NUMBER_OF_ADS; i++) {
+    for (var i = 0; i < arr.length; i++) {
       fragment.appendChild(getAd(arr[i]));
     }
     window.lib.map.insertBefore(fragment, nextSibling);

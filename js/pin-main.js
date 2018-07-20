@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ads = [];
 
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
@@ -10,17 +9,12 @@
     address.value = el.offsetLeft + ', ' + el.offsetTop;
   };
 
-  var onSuccessLoad = function (data) {
-    ads = data;
-    window.renderPins(ads);
-    window.renderAds(ads);
-  };
-
   var initiateMap = function () {
     window.lib.isMapActive = true;
     window.lib.map.classList.remove('map--faded');
     window.lib.form.classList.remove('ad-form--disabled');
-    window.backend.load(onSuccessLoad, window.lib.onError);
+    window.renderPins(window.filteredData);
+    window.renderAds(window.filteredData);
     showAddress(pinMain);
   };
 
@@ -101,7 +95,6 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
-  // window.backend.load(onSuccessLoad, window.lib.onError);
   window.lib.map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
 
