@@ -23,8 +23,46 @@
     }
   };
 
+  var housingRoomsFilter = function (obj) {
+    var housingRooms = document.querySelector('#housing-rooms');
+
+    return (obj.offer.rooms === +housingRooms.value) || (housingRooms.value === 'any');
+  };
+
+  var housingGuestsFilter = function (obj) {
+    var housingGuests = document.querySelector('#housing-guests');
+
+    return (obj.offer.guests === +housingGuests.value) || (housingGuests.value === 'any');
+  };
+
+  // var checkboxFilter = function (obj) {
+  //   var checkbox = document.querySelector('#housing-features');
+  //   var dataArr = obj.offer.features;
+  //   var boolean = false;
+  //   for (var i = 0; i < checkbox.elements.length; i++) {
+  //     if (checkbox.elements[i].checked) {
+  //       boolean = true;
+  //       if (dataArr.indexOf(checkbox.elements[i].value)) {
+  //         boolean *= true;
+  //       } else {
+  //         boolean *= false;
+  //       }
+  //     }
+  //   }
+  //   return boolean;
+  // };
+
+  var wifiFilter = function (obj) {
+    var wifi = document.querySelector('#filter-wifi');
+    if (wifi.checked && obj.offer.features.indexOf('wifi')) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   var combinedFilter = function (obj) {
-    return housingTypeFilter(obj) && housingPriceFilter(obj);
+    return housingTypeFilter(obj) && housingPriceFilter(obj) && housingRoomsFilter(obj) && housingGuestsFilter(obj) && wifiFilter(obj);
   };
 
   var onSuccessLoad = function (data) {

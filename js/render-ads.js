@@ -83,6 +83,7 @@
     popupAd.querySelector('.popup__text--time').textContent =
     'заезд после ' + obj.offer.checkin + ', выезд до ' + obj.offer.checkout;
     createNewChildren(popupAd.querySelector('.popup__features'), obj.offer.features);
+    popupAd.querySelector('.popup__description').textContent = obj.offer.description;
     copyNewChildren(popupAd.querySelector('.popup__photos'), obj.offer.photos);
     return popupAd;
   };
