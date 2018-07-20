@@ -2,6 +2,8 @@
 
 (function () {
 
+  var map = document.querySelector('.map');
+
   // обработчик ошибок
   var onError = function (errorMessage) {
     var element = document.createElement('div');
@@ -15,6 +17,18 @@
     element.style.padding = '10px 30px';
     element.style.borderRadius = '10px';
     document.body.appendChild(element);
+  };
+
+  // Удаляет все пины и объявления
+  var deleteElements = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var pinList = document.querySelector('.map__pins');
+    var popup = document.querySelectorAll('.popup');
+
+    for (var i = 0; i < pins.length; i++) {
+      pinList.removeChild(pins[i]);
+      map.removeChild(popup[i]);
+    }
   };
 
   window.lib = {
@@ -32,9 +46,10 @@
       }
     },
 
-    map: document.querySelector('.map'),
+    map: map,
     template: document.querySelector('template').content,
     form: document.querySelector('.ad-form'),
+    deleteElements: deleteElements,
     onError: onError
   };
 
