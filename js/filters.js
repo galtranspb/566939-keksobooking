@@ -3,6 +3,10 @@
 (function () {
 
   var originalData = [];
+  var Price = {
+    lowerLimit: 10000,
+    upperLimit: 50000
+  };
   var filterForm = document.querySelector('.map__filters');
 
   var housingTypeFilter = function (obj) {
@@ -16,10 +20,10 @@
 
     switch (housingPrice.value) {
       case 'any': return true;
-      case 'low': return obj.offer.price < 10000;
-      case 'middle': return obj.offer.price >= 10000 && obj.offer.price < 50000;
+      case 'low': return obj.offer.price < Price.lowerLimit;
+      case 'middle': return obj.offer.price >= Price.lowerLimit && obj.offer.price < Price.upperLimit;
       case 'high':
-      default: return obj.offer.price >= 50000;
+      default: return obj.offer.price >= Price.upperLimit;
     }
   };
 
