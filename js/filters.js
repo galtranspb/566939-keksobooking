@@ -2,6 +2,7 @@
 
 (function () {
 
+  var NUMBER_OF_ADS = 5;
   var originalData = [];
   var Price = {
     lowerLimit: 10000,
@@ -51,6 +52,12 @@
   var checkboxFilter = function (obj) {
     var dataArr = obj.offer.features;
     var filterArr = document.querySelectorAll('.map__features [name="features"]');
+    var isAllFeaturesEmpty = Array.from(filterArr).every(function (item) {
+      return !item.checked;
+    });
+    if (isAllFeaturesEmpty) {
+      return true;
+    }
     for (var i = 0; i < filterArr.length; i++) {
       if (filterArr[i].checked && find(dataArr, filterArr[i].value)) {
         return true;
@@ -65,11 +72,11 @@
 
   var onSuccessLoad = function (data) {
     originalData = data;
-    window.filteredData = originalData.filter(combinedFilter);
+    window.filteredData = originalData.filter(combinedFilter).slice(0, NUMBER_OF_ADS);
   };
 
   var onFilterChange = window.debounce(function () {
-    window.filteredData = originalData.filter(combinedFilter);
+    window.filteredData = originalData.filter(combinedFilter).slice(0, NUMBER_OF_ADS);
     window.lib.deleteElements();
     window.renderPins(window.filteredData);
     window.renderAds(window.filteredData);
