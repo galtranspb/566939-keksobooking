@@ -2,8 +2,22 @@
 
 (function () {
 
+  var ESC_CODE = 27;
+  var openedAdIndex;
+
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
+
+  var LimitMovement = {
+    x: {
+      min: 0,
+      max: 1135
+    },
+    y: {
+      min: 130,
+      max: 630
+    }
+  };
 
   var showAddress = function (el) {
     address.value = el.offsetLeft + ', ' + el.offsetTop;
@@ -18,8 +32,16 @@
     showAddress(pinMain);
   };
 
+  var onEscPress = function (evt) {
+    if (evt.keyCode === ESC_CODE) {
+      hideAd(openedAdIndex);
+    }
+  };
+
   // Принимает индекс. Скрывает все объявления и показывет объявление с входящим индексом.
   var showAd = function (index) {
+    openedAdIndex = index;
+    document.addEventListener('keydown', onEscPress);
     var adList = document.querySelectorAll('.popup');
     for (var i = 0; i < adList.length; i++) {
       adList[i].style = 'display: none;';
@@ -29,6 +51,7 @@
 
   // Принимет индекс. Скрывает объявление с входящим индексом.
   var hideAd = function (index) {
+    document.removeEventListener('keydown', onEscPress);
     var adList = document.querySelectorAll('.popup');
     adList[index].style = 'display: none;';
   };
@@ -64,16 +87,16 @@
         y: pinMain.offsetTop + moveEvt.movementY
       };
 
-      if (coord.x < window.lib.LOCATION.X.MIN) {
-        coord.x = window.lib.LOCATION.X.MIN;
-      } else if (coord.x > window.lib.LOCATION.X.MAX) {
-        coord.x = window.lib.LOCATION.X.MAX;
+      if (coord.x < LimitMovement.x.min) {
+        coord.x = LimitMovement.x.min;
+      } else if (coord.x > LimitMovement.x.max) {
+        coord.x = LimitMovement.x.max;
       }
 
-      if (coord.y < window.lib.LOCATION.Y.MIN) {
-        coord.y = window.lib.LOCATION.Y.MIN;
-      } else if (coord.y > window.lib.LOCATION.Y.MAX) {
-        coord.y = window.lib.LOCATION.Y.MAX;
+      if (coord.y < LimitMovement.y.min) {
+        coord.y = LimitMovement.y.min;
+      } else if (coord.y > LimitMovement.y.max) {
+        coord.y = LimitMovement.y.max;
       }
 
       pinMain.style.top = coord.y + 'px';
