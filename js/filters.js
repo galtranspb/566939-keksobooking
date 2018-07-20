@@ -35,34 +35,28 @@
     return (obj.offer.guests === +housingGuests.value) || (housingGuests.value === 'any');
   };
 
-  // var checkboxFilter = function (obj) {
-  //   var checkbox = document.querySelector('#housing-features');
-  //   var dataArr = obj.offer.features;
-  //   var boolean = false;
-  //   for (var i = 0; i < checkbox.elements.length; i++) {
-  //     if (checkbox.elements[i].checked) {
-  //       boolean = true;
-  //       if (dataArr.indexOf(checkbox.elements[i].value)) {
-  //         boolean *= true;
-  //       } else {
-  //         boolean *= false;
-  //       }
-  //     }
-  //   }
-  //   return boolean;
-  // };
-
-  var wifiFilter = function (obj) {
-    var wifi = document.querySelector('#filter-wifi');
-    if (wifi.checked && obj.offer.features.indexOf('wifi')) {
-      return true;
-    } else {
-      return false;
+  var find = function (arr, value) {
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i] === value) {
+        return true;
+      }
     }
+    return false;
+  };
+
+  var checkboxFilter = function (obj) {
+    var dataArr = obj.offer.features;
+    var filterArr = document.querySelectorAll('.map__features [name="features"]');
+    for (var i = 0; i < filterArr.length; i++) {
+      if (filterArr[i].checked && find(dataArr, filterArr[i].value)) {
+        return true;
+      }
+    }
+    return false;
   };
 
   var combinedFilter = function (obj) {
-    return housingTypeFilter(obj) && housingPriceFilter(obj) && housingRoomsFilter(obj) && housingGuestsFilter(obj) && wifiFilter(obj);
+    return housingTypeFilter(obj) && housingPriceFilter(obj) && housingRoomsFilter(obj) && housingGuestsFilter(obj) && checkboxFilter(obj);
   };
 
   var onSuccessLoad = function (data) {
