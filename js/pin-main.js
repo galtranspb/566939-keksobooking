@@ -43,9 +43,10 @@
     openedAdIndex = index;
     document.addEventListener('keydown', onEscPress);
     var adList = document.querySelectorAll('.popup');
-    for (var i = 0; i < adList.length; i++) {
-      adList[i].style = 'display: none;';
-    }
+
+    adList.forEach(function (el) {
+      el.style = 'display: none;';
+    });
     adList[index].style = 'display: block;';
   };
 
@@ -62,16 +63,17 @@
   var onMapClick = function (evt) {
     var pinImageList = document.querySelectorAll('.map__pin:not(.map__pin--main) img');
     var adButtonClose = document.querySelectorAll('.popup__close');
-    for (var i = 0; i < pinImageList.length; i++) {
-      if (pinImageList[i] === evt.target) {
+
+    pinImageList.forEach(function (el, i) {
+      if (el === evt.target) {
         showAd(i);
       }
-    }
-    for (var j = 0; j < adButtonClose.length; j++) {
-      if (adButtonClose[j] === evt.target) {
-        hideAd(j);
+    });
+    adButtonClose.forEach(function (el, i) {
+      if (el === evt.target) {
+        hideAd(i);
       }
-    }
+    });
   };
 
   // Обработчик mousedown на pinMain

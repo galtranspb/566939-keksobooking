@@ -62,13 +62,14 @@
 
   // Если у элемента ошибка валидации, то подсвечивает элемент тенью
   var showInvalidFields = function () {
-    for (var i = 0; i < window.lib.form.elements.length; i++) {
-      if (window.lib.form.elements[i].validity.valid === false) {
-        window.lib.form.elements[i].style.webkitBoxShadow = '0 0 2px 2px #000';
-        window.lib.form.elements[i].style.boxShadow = '0 0 2px 2px #000';
+    var form = window.lib.form.elements;
+    for (var i = 0; i < form.length; i++) {
+      if (form[i].validity.valid === false) {
+        form[i].style.webkitBoxShadow = '0 0 2px 2px #000';
+        form[i].style.boxShadow = '0 0 2px 2px #000';
       } else {
-        window.lib.form.elements[i].style.webkitBoxShadow = '';
-        window.lib.form.elements[i].style.boxShadow = '';
+        form[i].style.webkitBoxShadow = '';
+        form[i].style.boxShadow = '';
       }
     }
   };

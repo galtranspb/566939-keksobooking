@@ -25,10 +25,10 @@
     var pinList = document.querySelector('.map__pins');
     var popup = document.querySelectorAll('.popup');
 
-    for (var i = 0; i < pins.length; i++) {
-      pinList.removeChild(pins[i]);
+    pins.forEach(function (el, i) {
+      pinList.removeChild(el);
       map.removeChild(popup[i]);
-    }
+    });
   };
 
   window.lib = {
