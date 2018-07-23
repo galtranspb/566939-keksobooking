@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
 
   var Price = {
     bungalo: 0,
@@ -9,7 +10,6 @@
     palace: 10000
   };
 
-  var ESC_KEYCODE = 27;
   var success = document.querySelector('.success');
 
   // Принимает значение. Устанавливает полю формы "Цена за ночь" минимальную цену и плейсхолдер.цена жилья
