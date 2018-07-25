@@ -112,7 +112,7 @@
   });
 
   window.lib.form.timeout.addEventListener('change', function () {
-  window.lib.form.timein.value = window.lib.form.timeout.value;
+    window.lib.form.timein.value = window.lib.form.timeout.value;
   });
 
   window.lib.form.addEventListener('submit', onFormSubmit);
