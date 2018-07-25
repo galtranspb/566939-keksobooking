@@ -60,24 +60,10 @@
     return true;
   };
 
-  // Если у элемента ошибка валидации, то подсвечивает элемент тенью
-  var showInvalidFields = function () {
-    var form = window.lib.form.elements;
-    for (var i = 0; i < form.length; i++) {
-      if (form[i].validity.valid === false) {
-        form[i].style.webkitBoxShadow = '0 0 2px 2px #000';
-        form[i].style.boxShadow = '0 0 2px 2px #000';
-      } else {
-        form[i].style.webkitBoxShadow = '';
-        form[i].style.boxShadow = '';
-      }
-    }
-  };
-
   // кэлбэк на успешную отправку формы. Переводит карту и форму в неактивное состояние.
   var onSuccessSave = function () {
     window.lib.isMapActive = false;
-    window.lib.map.classList.add('map--faded');
+    window.pinMain.map.classList.add('map--faded');
     window.lib.form.classList.add('ad-form--disabled');
     window.lib.form.reset();
   };
@@ -109,28 +95,24 @@
   // отправляет форму, иначе - показывает поля с ошибками.
   var onFormSubmit = function (evt) {
     evt.preventDefault();
-    window.lib.form.rooms.addEventListener('change', onRoomsChange);
-    window.lib.form.capacity.addEventListener('change', onRoomsChange);
-
-    if (onRoomsChange()) {
-      window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
-      window.lib.deleteElements();
-      showSuccessMessage();
-    } else {
-      showInvalidFields();
-    }
+    window.backend.save(new FormData(window.lib.form), onSuccessSave, window.lib.onError);
+    window.lib.deleteElements();
+    showSuccessMessage();
+    window.pinMain.centeredPinMain();
   };
 
   window.lib.form.type.addEventListener('change', onTypeChange);
-
   window.lib.form.price.addEventListener('input', onTypeChange);
+
+  window.lib.form.rooms.addEventListener('change', onRoomsChange);
+  window.lib.form.capacity.addEventListener('change', onRoomsChange);
 
   window.lib.form.timein.addEventListener('change', function () {
     window.lib.form.timeout.value = window.lib.form.timein.value;
   });
 
   window.lib.form.timeout.addEventListener('change', function () {
-    window.lib.form.timein.value = window.lib.form.timeout.value;
+  window.lib.form.timein.value = window.lib.form.timeout.value;
   });
 
   window.lib.form.addEventListener('submit', onFormSubmit);

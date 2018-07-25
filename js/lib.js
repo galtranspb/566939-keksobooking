@@ -2,8 +2,6 @@
 
 (function () {
 
-  var map = document.querySelector('.map');
-
   // обработчик ошибок
   var onError = function (errorMessage) {
     var element = document.createElement('div');
@@ -27,13 +25,12 @@
 
     pins.forEach(function (el, i) {
       pinList.removeChild(el);
-      map.removeChild(popup[i]);
+      window.pinMain.map.removeChild(popup[i]);
     });
   };
 
   window.lib = {
     isMapActive: false,
-    map: map,
     template: document.querySelector('template').content,
     form: document.querySelector('.ad-form'),
     deleteElements: deleteElements,

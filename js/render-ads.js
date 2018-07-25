@@ -13,8 +13,8 @@
   var nextSibling = document.querySelector('.map__filters-container');
 
   // Принимает число. Склоняет существительное комната по числу комнат.
-  var getDeclensionOfRoom = function (number) {
-    switch (number) {
+  var getDeclensionOfRoom = function (num) {
+    switch (num) {
       case 1: return ' комната для ';
       case 5: return ' комнат для ';
       default: return ' комнаты для ';
@@ -22,8 +22,8 @@
   };
 
   // Принимает число. Склоняет существительное гость по числу гостей.
-  var getDeclensionOfGuests = function (number) {
-    return (number === 1) ? ' гостя' : ' гостей';
+  var getDeclensionOfGuests = function (num) {
+    return (num === 1) ? ' гостя' : ' гостей';
   };
 
   // Принимает объект.
@@ -94,7 +94,7 @@
     arr.forEach(function (el) {
       fragment.appendChild(getAd(el));
     });
-    window.lib.map.insertBefore(fragment, nextSibling);
+    window.pinMain.map.insertBefore(fragment, nextSibling);
   };
 
 })();
