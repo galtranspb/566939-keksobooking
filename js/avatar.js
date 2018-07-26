@@ -9,14 +9,14 @@
   var fileChooser = document.querySelector('.ad-form-header__input');
   var preview = document.querySelector('.ad-form-header__preview img');
 
-  // var makeElement = function (tagName, className, text) {
-  //   var element = document.createElement(tagName);
-  //   element.classList.add(className);
-  //   if (text) {
-  //     element.textContent = text;
-  //   }
-  //   return element;
-  // };
+  var makeElement = function (tagName, className, text) {
+    var element = document.createElement(tagName);
+    element.classList.add(className);
+    if (text) {
+      element.textContent = text;
+    }
+    return element;
+  };
 
   var onFileChooserChange = function () {
     var file = fileChooser.files[0];
@@ -42,7 +42,7 @@
   // *************************************закгрузка фото жилья********************************
 
   var fileChooser2 = document.querySelector('.ad-form__input');
-  var previewList = document.querySelector('.ad-form__photo');
+  var previewList = document.querySelector('.ad-form__photo-container');
 
   var onFileChooserChange2 = function () {
     var fileList = fileChooser2.files;
@@ -55,9 +55,7 @@
       });
 
       if (matches) {
-        // var item = makeElement('img', 'ad-form__photo');
-        var item = document.createElement('img');
-        item.style = 'width: 70px; height: 70px;';
+        var item = makeElement('img', 'ad-form__photo');
         var reader = new FileReader();
 
         reader.addEventListener('load', function () {
