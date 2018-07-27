@@ -25,18 +25,25 @@
     photoList.appendChild(item);
   };
 
+  var createReader = function (onLoad, file) {
+    var reader = new FileReader();
+    reader.addEventListener('load', onLoad);
+    reader.readAsDataURL(file);
+  };
+
   var onAvatarChange = function () {
-    var file = avatarChooser.files[0];
-    var fileName = file.name.toLowerCase();
+    var fileList = avatarChooser.files;
 
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
+    for (var i = 0; i < fileList.length; i++) {
+      var fileName = fileList[i].name.toLowerCase();
 
-    if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', onAvatarLoad);
-      reader.readAsDataURL(file);
+      var matches = FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
+      });
+
+      if (matches) {
+        createReader(onAvatarLoad, fileList[i]);
+      }
     }
   };
 
@@ -51,9 +58,7 @@
       });
 
       if (matches) {
-        var reader = new FileReader();
-        reader.addEventListener('load', onPhotoLoad);
-        reader.readAsDataURL(fileList[i]);
+        createReader(onPhotoLoad, fileList[i]);
       }
     }
   };

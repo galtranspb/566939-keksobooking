@@ -12,6 +12,13 @@
 
   var success = document.querySelector('.success');
 
+  // Принимаю коллекцию узлов nodeList. Удалаяет все элементы коллекции.
+  var clearChooser = function (list) {
+    list.forEach(function (el) {
+      el.parentNode.removeChild(el);
+    });
+  };
+
   // Принимает значение. Устанавливает полю формы "Цена за ночь" минимальную цену и плейсхолдер.цена жилья
   var setMinPrice = function (value) {
     window.lib.form.price.min = value;
@@ -58,11 +65,15 @@
 
   // кэлбэк на успешную отправку формы. Переводит карту и форму в неактивное состояние.
   var onSuccessSave = function () {
+    var photos = document.querySelectorAll('.ad-form__photo');
+    var avatar = document.querySelector('.ad-form-header__preview img');
     window.lib.isMapActive = false;
     window.pinMain.map.classList.add('map--faded');
-    window.pinMain.disableForm();
     window.lib.form.classList.add('ad-form--disabled');
     window.lib.form.reset();
+    window.pinMain.disableForm();
+    clearChooser(photos);
+    avatar.src = 'img/muffin-grey.svg';
   };
 
   // Обработчик нажатия клавиши ESC.
