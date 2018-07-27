@@ -97,6 +97,7 @@
     success.classList.remove('hidden');
     success.addEventListener('click', onSuccessClick);
     window.addEventListener('keydown', onSuccessEscPress);
+    document.removeEventListener('keydown', window.pinMain.onEscPress);
   };
 
   // Отменяет отправку формы. Вешает обработчики 'change' на поля кол-во комнат и мест и, если onRoomsChange возвращет true, то

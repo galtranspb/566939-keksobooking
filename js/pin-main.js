@@ -148,6 +148,7 @@
 
   window.pinMain = {
     map: map,
+    onEscPress: onEscPress,
     disableForm: disableForm,
     centeredPinMain: centeredPinMain
   };
