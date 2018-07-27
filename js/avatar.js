@@ -32,35 +32,35 @@
   };
 
   var onAvatarChange = function () {
-    var fileList = avatarChooser.files;
+    var files = avatarChooser.files;
 
-    for (var i = 0; i < fileList.length; i++) {
-      var fileName = fileList[i].name.toLowerCase();
+    Array.from(files).forEach(function (el) {
+      var fileName = el.name.toLowerCase();
 
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
 
       if (matches) {
-        createReader(onAvatarLoad, fileList[i]);
+        createReader(onAvatarLoad, el);
       }
-    }
+    });
   };
 
   var onPhotoChange = function () {
-    var fileList = photoChooser.files;
+    var files = photoChooser.files;
 
-    for (var i = 0; i < fileList.length; i++) {
-      var fileName = fileList[i].name.toLowerCase();
+    Array.from(files).forEach(function (el) {
+      var fileName = el.name.toLowerCase();
 
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
 
       if (matches) {
-        createReader(onPhotoLoad, fileList[i]);
+        createReader(onPhotoLoad, el);
       }
-    }
+    });
   };
 
   photoList.removeChild(document.querySelector('div.ad-form__photo'));
