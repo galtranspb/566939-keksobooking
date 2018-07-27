@@ -60,6 +60,7 @@
   var onSuccessSave = function () {
     window.lib.isMapActive = false;
     window.pinMain.map.classList.add('map--faded');
+    window.pinMain.disableForm();
     window.lib.form.classList.add('ad-form--disabled');
     window.lib.form.reset();
   };

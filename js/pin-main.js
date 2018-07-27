@@ -10,6 +10,7 @@
   var mapWidth = map.clientWidth;
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
+  var fieldsetList = document.querySelectorAll('.ad-form fieldset');
 
   var LimitMovement = {
     x: {
@@ -19,6 +20,18 @@
     y: {
       min: 130,
       max: 630
+    }
+  };
+
+  var disableForm = function () {
+    for (var i = 0; i < fieldsetList.length; i++) {
+      fieldsetList[i].disabled = true;
+    }
+  };
+
+  var enableForm = function () {
+    for (var i = 0; i < fieldsetList.length; i++) {
+      fieldsetList[i].disabled = false;
     }
   };
 
@@ -32,6 +45,7 @@
 
   var initiateMap = function () {
     window.lib.isMapActive = true;
+    enableForm();
     map.classList.remove('map--faded');
     window.lib.form.classList.remove('ad-form--disabled');
     window.renderPins(window.filteredData);
@@ -127,12 +141,14 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
+  disableForm();
   centeredPinMain();
   map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
 
   window.pinMain = {
     map: map,
+    disableForm: disableForm,
     centeredPinMain: centeredPinMain
   };
 
