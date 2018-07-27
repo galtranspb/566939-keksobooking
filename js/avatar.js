@@ -31,36 +31,26 @@
     reader.readAsDataURL(file);
   };
 
-  var onAvatarChange = function () {
-    var files = avatarChooser.files;
-
-    Array.from(files).forEach(function (el) {
+  var createChanger = function (list, callback) {
+    Array.from(list).forEach(function (el) {
       var fileName = el.name.toLowerCase();
-
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
-
       if (matches) {
-        createReader(onAvatarLoad, el);
+        createReader(callback, el);
       }
     });
   };
 
+  var onAvatarChange = function () {
+    var files = avatarChooser.files;
+    createChanger(files, onAvatarLoad);
+  };
+
   var onPhotoChange = function () {
     var files = photoChooser.files;
-
-    Array.from(files).forEach(function (el) {
-      var fileName = el.name.toLowerCase();
-
-      var matches = FILE_TYPES.some(function (it) {
-        return fileName.endsWith(it);
-      });
-
-      if (matches) {
-        createReader(onPhotoLoad, el);
-      }
-    });
+    createChanger(files, onPhotoLoad);
   };
 
   photoList.removeChild(document.querySelector('div.ad-form__photo'));
