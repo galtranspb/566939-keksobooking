@@ -12,13 +12,11 @@
 
   var housingTypeFilter = function (obj) {
     var housingType = document.querySelector('#housing-type');
-
     return (obj.offer.type === housingType.value) || (housingType.value === 'any');
   };
 
   var housingPriceFilter = function (obj) {
     var housingPrice = document.querySelector('#housing-price');
-
     switch (housingPrice.value) {
       case 'any': return true;
       case 'low': return obj.offer.price < Price.lowerLimit;
@@ -30,23 +28,18 @@
 
   var housingRoomsFilter = function (obj) {
     var housingRooms = document.querySelector('#housing-rooms');
-
     return (obj.offer.rooms === +housingRooms.value) || (housingRooms.value === 'any');
   };
 
   var housingGuestsFilter = function (obj) {
     var housingGuests = document.querySelector('#housing-guests');
-
     return (obj.offer.guests === +housingGuests.value) || (housingGuests.value === 'any');
   };
 
-  var find = function (arr, value) {
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i] === value) {
-        return true;
-      }
-    }
-    return false;
+  var getCompareValues = function (arr, value) {
+    return arr.some(function (el) {
+      return el === value;
+    });
   };
 
   var checkboxFilter = function (obj) {
@@ -58,12 +51,9 @@
     if (isAllFeaturesEmpty) {
       return true;
     }
-    for (var i = 0; i < filterArr.length; i++) {
-      if (filterArr[i].checked && find(dataArr, filterArr[i].value)) {
-        return true;
-      }
-    }
-    return false;
+    return Array.from(filterArr).some(function (el) {
+      return el.checked && getCompareValues(dataArr, el.value);
+    });
   };
 
   var combinedFilter = function (obj) {
