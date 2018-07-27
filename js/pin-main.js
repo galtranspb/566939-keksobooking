@@ -3,20 +3,40 @@
 (function () {
 
   var ESC_CODE = 27;
+  var PIN_WIDTH = 65;
   var openedAdIndex;
 
+  var map = document.querySelector('.map');
+  var mapWidth = map.clientWidth;
   var address = document.querySelector('#address');
   var pinMain = document.querySelector('.map__pin--main');
+  var fieldsetList = document.querySelectorAll('.ad-form fieldset');
 
   var LimitMovement = {
     x: {
       min: 0,
-      max: 1135
+      max: mapWidth - PIN_WIDTH
     },
     y: {
       min: 130,
       max: 630
     }
+  };
+
+  var disableForm = function () {
+    for (var i = 0; i < fieldsetList.length; i++) {
+      fieldsetList[i].disabled = true;
+    }
+  };
+
+  var enableForm = function () {
+    for (var i = 0; i < fieldsetList.length; i++) {
+      fieldsetList[i].disabled = false;
+    }
+  };
+
+  var centeredPinMain = function () {
+    pinMain.style.left = (mapWidth - PIN_WIDTH) / 2 + 'px';
   };
 
   var showAddress = function (el) {
@@ -25,7 +45,8 @@
 
   var initiateMap = function () {
     window.lib.isMapActive = true;
-    window.lib.map.classList.remove('map--faded');
+    enableForm();
+    map.classList.remove('map--faded');
     window.lib.form.classList.remove('ad-form--disabled');
     window.renderPins(window.filteredData);
     window.renderAds(window.filteredData);
@@ -43,9 +64,10 @@
     openedAdIndex = index;
     document.addEventListener('keydown', onEscPress);
     var adList = document.querySelectorAll('.popup');
-    for (var i = 0; i < adList.length; i++) {
-      adList[i].style = 'display: none;';
-    }
+
+    adList.forEach(function (el) {
+      el.style = 'display: none;';
+    });
     adList[index].style = 'display: block;';
   };
 
@@ -62,16 +84,17 @@
   var onMapClick = function (evt) {
     var pinImageList = document.querySelectorAll('.map__pin:not(.map__pin--main) img');
     var adButtonClose = document.querySelectorAll('.popup__close');
-    for (var i = 0; i < pinImageList.length; i++) {
-      if (pinImageList[i] === evt.target) {
+
+    pinImageList.forEach(function (el, i) {
+      if (el === evt.target) {
         showAd(i);
       }
-    }
-    for (var j = 0; j < adButtonClose.length; j++) {
-      if (adButtonClose[j] === evt.target) {
-        hideAd(j);
+    });
+    adButtonClose.forEach(function (el, i) {
+      if (el === evt.target) {
+        hideAd(i);
       }
-    }
+    });
   };
 
   // Обработчик mousedown на pinMain
@@ -118,7 +141,16 @@
     document.addEventListener('mouseup', onDocumentMouseup);
   };
 
-  window.lib.map.addEventListener('click', onMapClick);
+  disableForm();
+  centeredPinMain();
+  map.addEventListener('click', onMapClick);
   pinMain.addEventListener('mousedown', onPinMainMousedown);
+
+  window.pinMain = {
+    map: map,
+    onEscPress: onEscPress,
+    disableForm: disableForm,
+    centeredPinMain: centeredPinMain
+  };
 
 })();

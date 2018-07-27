@@ -13,8 +13,8 @@
   var nextSibling = document.querySelector('.map__filters-container');
 
   // Принимает число. Склоняет существительное комната по числу комнат.
-  var getDeclensionOfRoom = function (number) {
-    switch (number) {
+  var getDeclensionOfRoom = function (num) {
+    switch (num) {
       case 1: return ' комната для ';
       case 5: return ' комнат для ';
       default: return ' комнаты для ';
@@ -22,8 +22,8 @@
   };
 
   // Принимает число. Склоняет существительное гость по числу гостей.
-  var getDeclensionOfGuests = function (number) {
-    return (number === 1) ? ' гостя' : ' гостей';
+  var getDeclensionOfGuests = function (num) {
+    return (num === 1) ? ' гостя' : ' гостей';
   };
 
   // Принимает объект.
@@ -49,22 +49,22 @@
   // Удаляет дочерние элементы объекта и создает новые дочерние объекты, с классами из массива arr.
   var createNewChildren = function (obj, arr) {
     deleteChildren(obj);
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (el) {
       var item = makeElement('li', 'popup__feature');
-      item.classList.add('popup__feature--' + arr[i]);
+      item.classList.add('popup__feature--' + el);
       obj.appendChild(item);
-    }
+    });
   };
 
   // Принимает объект и массив. Удаляет все дочерние элементы объекта. Клонирует новые элементы из шаблона, в количестве
   // равном длине массива. Назначает свойство src i-му элементу объекта, равное значению i-го элемента массива.
   var copyNewChildren = function (obj, arr) {
     deleteChildren(obj);
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (el) {
       var element = templateAd.querySelector('.popup__photo').cloneNode();
-      element.src = arr[i];
+      element.src = el;
       obj.appendChild(element);
-    }
+    });
   };
 
   // Принимает массив объектов-объявлений ads.
@@ -91,10 +91,10 @@
   // Отрисовывает сгенерированные DOM-элементы в блок .map(map) перед блоком .map__filters-cintainer(nextSibling).
   window.renderAds = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      fragment.appendChild(getAd(arr[i]));
-    }
-    window.lib.map.insertBefore(fragment, nextSibling);
+    arr.forEach(function (el) {
+      fragment.appendChild(getAd(el));
+    });
+    window.pinMain.map.insertBefore(fragment, nextSibling);
   };
 
 })();

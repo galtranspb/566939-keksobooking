@@ -2,8 +2,6 @@
 
 (function () {
 
-  var map = document.querySelector('.map');
-
   // обработчик ошибок
   var onError = function (errorMessage) {
     var element = document.createElement('div');
@@ -25,15 +23,14 @@
     var pinList = document.querySelector('.map__pins');
     var popup = document.querySelectorAll('.popup');
 
-    for (var i = 0; i < pins.length; i++) {
-      pinList.removeChild(pins[i]);
-      map.removeChild(popup[i]);
-    }
+    pins.forEach(function (el, i) {
+      pinList.removeChild(el);
+      window.pinMain.map.removeChild(popup[i]);
+    });
   };
 
   window.lib = {
     isMapActive: false,
-    map: map,
     template: document.querySelector('template').content,
     form: document.querySelector('.ad-form'),
     deleteElements: deleteElements,

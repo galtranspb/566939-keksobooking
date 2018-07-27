@@ -19,9 +19,9 @@
   // Отрисовывает сгенерированные DOM-элементы в блок .map-pins.
   window.renderPins = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      fragment.appendChild(getPopupPin(arr[i]));
-    }
+    arr.forEach(function (el) {
+      fragment.appendChild(getPopupPin(el));
+    });
     pinList.appendChild(fragment);
   };
 
