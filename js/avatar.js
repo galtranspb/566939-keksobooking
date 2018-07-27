@@ -25,32 +25,28 @@
     photoList.appendChild(item);
   };
 
-  var createReader = function (onLoad, file) {
-    var reader = new FileReader();
-    reader.addEventListener('load', onLoad);
-    reader.readAsDataURL(file);
-  };
-
-  var createChanger = function (list, callback) {
+  var createReader = function (list, onLoad) {
     Array.from(list).forEach(function (el) {
       var fileName = el.name.toLowerCase();
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
       });
       if (matches) {
-        createReader(callback, el);
+        var reader = new FileReader();
+        reader.addEventListener('load', onLoad);
+        reader.readAsDataURL(el);
       }
     });
   };
 
   var onAvatarChange = function () {
     var files = avatarChooser.files;
-    createChanger(files, onAvatarLoad);
+    createReader(files, onAvatarLoad);
   };
 
   var onPhotoChange = function () {
     var files = photoChooser.files;
-    createChanger(files, onPhotoLoad);
+    createReader(files, onPhotoLoad);
   };
 
   photoList.removeChild(document.querySelector('div.ad-form__photo'));
