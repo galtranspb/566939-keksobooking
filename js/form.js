@@ -25,7 +25,7 @@
   };
 
   // Синхронизирует поля кол-во комнат и кол-во гостей по соответсвующим правилам.
-  var onRoomsChange = function () {
+  var setCapacityValidity = function () {
     var rooms = window.lib.form.rooms.value;
     var capacity = window.lib.form.capacity.value;
     var errorMessage = '';
@@ -54,10 +54,6 @@
         errorMessage = '';
     }
     window.lib.form.capacity.setCustomValidity(errorMessage);
-    if (errorMessage) {
-      return false;
-    }
-    return true;
   };
 
   // кэлбэк на успешную отправку формы. Переводит карту и форму в неактивное состояние.
@@ -104,8 +100,9 @@
   window.lib.form.type.addEventListener('change', onTypeChange);
   window.lib.form.price.addEventListener('input', onTypeChange);
 
-  window.lib.form.rooms.addEventListener('change', onRoomsChange);
-  window.lib.form.capacity.addEventListener('change', onRoomsChange);
+  setCapacityValidity();
+  window.lib.form.rooms.addEventListener('change', setCapacityValidity);
+  window.lib.form.capacity.addEventListener('change', setCapacityValidity);
 
   window.lib.form.timein.addEventListener('change', function () {
     window.lib.form.timeout.value = window.lib.form.timein.value;
